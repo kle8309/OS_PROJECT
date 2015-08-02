@@ -1,0 +1,14 @@
+.\command.o: command.c
+.\command.o: command.h
+.\command.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\command.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\command.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\command.o: C:\Keil\ARM\ARMCC\bin\..\include\stdlib.h
+.\command.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\command.o: defs.h
+.\command.o: adc.h
+.\command.o: os.h
+.\command.o: debug.h
+.\command.o: C:\Keil\ARM\ARMCC\bin\..\include\errno.h
+.\command.o: st7735.h
+.\command.o: pwm.h

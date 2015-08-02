@@ -1,0 +1,101 @@
+Dependencies for Project 'tivaOS', Target 'tiva OS': (DO NOT MODIFY !)
+F (.\startup.s)(0x54DAFEE0)(--cpu Cortex-M4 --pd "__EVAL SETA 1" -g --apcs=interwork --pd "__MICROLIB SETA 1"-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123--list .\startup.lst --xref -o .\startup.o --depend .\startup.d)
+F (.\main.c)(0x55BD1493)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\main.o --omf_browse .\main.crf --depend .\main.d)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C87C24)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (debug.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\errno.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C87C24)
+I (pll.h)(0x54DAFEE0)
+I (st7735.h)(0x54DAFEE0)
+I (usb_uart.h)(0x55BD153C)
+I (systick.h)(0x54DAFEE0)
+I (pwm.h)(0x54DAFEE0)
+I (adc.h)(0x54DAFEE0)
+I (timer0.h)(0x54DAFEE0)
+I (interpreter.h)(0x54DAFEE0)
+F (.\pll.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\pll.o --omf_browse .\pll.crf --depend .\pll.d)
+I (PLL.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+F (.\st7735.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\st7735.o --omf_browse .\st7735.crf --depend .\st7735.d)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (st7735.h)(0x54DAFEE0)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+F (.\usb_uart.c)(0x55BD142D)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\usb_uart.o --omf_browse .\usb_uart.crf --depend .\usb_uart.d)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (usb_uart.h)(0x55BD153C)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (interpreter.h)(0x54DAFEE0)
+I (fifo.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+F (.\systick.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\systick.o --omf_browse .\systick.crf --depend .\systick.d)
+I (systick.h)(0x54DAFEE0)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+F (.\pwm.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\pwm.o --omf_browse .\pwm.crf --depend .\pwm.d)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (pwm.h)(0x54DAFEE0)
+F (.\interpreter.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\interpreter.o --omf_browse .\interpreter.crf --depend .\interpreter.d)
+I (interpreter.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (pwm.h)(0x54DAFEE0)
+I (command.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (defs.h)(0x54DAFEE0)
+I (debug.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\errno.h)(0x51C87C24)
+I (fifo.h)(0x54DAFEE0)
+F (.\command.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\command.o --omf_browse .\command.crf --depend .\command.d)
+I (command.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdlib.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\stdbool.h)(0x51C87C24)
+I (defs.h)(0x54DAFEE0)
+I (adc.h)(0x54DAFEE0)
+I (os.h)(0x54DAFEE0)
+I (debug.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\errno.h)(0x51C87C24)
+I (st7735.h)(0x54DAFEE0)
+I (pwm.h)(0x54DAFEE0)
+F (.\timer0.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\timer0.o --omf_browse .\timer0.crf --depend .\timer0.d)
+I (Timer0.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+F (.\adc.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\adc.o --omf_browse .\adc.crf --depend .\adc.d)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (adc.h)(0x54DAFEE0)
+I (Timer0.h)(0x54DAFEE0)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (debug.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\errno.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C87C24)
+F (.\debug.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\debug.o --omf_browse .\debug.crf --depend .\debug.d)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (debug.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\errno.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C87C24)
+F (.\os.c)(0x54DAFEE0)(-c --cpu Cortex-M4 -D__EVAL -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I.. -I..\..\.. --C99-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\TI\TM4C123-Drvmdk -DPART_TM4C123GH6PM -DTM4C123GH6PM-o .\os.o --omf_browse .\os.crf --depend .\os.d)
+I (tm4c123gh6pm.h)(0x55BAAF7A)
+I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C87C24)
+I (os.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\stdio.h)(0x51C87C24)
+I (debug.h)(0x54DAFEE0)
+I (C:\Keil\ARM\ARMCC\include\errno.h)(0x51C87C24)
+I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C87C24)
+I (systick.h)(0x54DAFEE0)
+I (defs.h)(0x54DAFEE0)

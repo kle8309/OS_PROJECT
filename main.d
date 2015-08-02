@@ -1,0 +1,17 @@
+.\main.o: main.c
+.\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
+.\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\main.o: C:\Keil\ARM\ARMCC\bin\..\include\stdlib.h
+.\main.o: tm4c123gh6pm.h
+.\main.o: debug.h
+.\main.o: C:\Keil\ARM\ARMCC\bin\..\include\errno.h
+.\main.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\main.o: pll.h
+.\main.o: st7735.h
+.\main.o: usb_uart.h
+.\main.o: systick.h
+.\main.o: pwm.h
+.\main.o: adc.h
+.\main.o: timer0.h
+.\main.o: interpreter.h

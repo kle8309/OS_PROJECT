@@ -1,0 +1,10 @@
+.\os.o: os.c
+.\os.o: tm4c123gh6pm.h
+.\os.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\os.o: os.h
+.\os.o: C:\Keil\ARM\ARMCC\bin\..\include\stdio.h
+.\os.o: debug.h
+.\os.o: C:\Keil\ARM\ARMCC\bin\..\include\errno.h
+.\os.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
+.\os.o: systick.h
+.\os.o: defs.h
