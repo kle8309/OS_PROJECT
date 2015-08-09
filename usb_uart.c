@@ -58,9 +58,9 @@ void USB_UART_Init(void){
   while ((SYSCTL_PRGPIO_R & SYSCTL_PRGPIO_R0) == 0) {}; // wait for PORTA to activate
   
   // configure PORTA pins for use with UART0
-  GPIO_PORTA_AFSEL_R |= 0x03;
+  GPIO_PORTA_AFSEL_R |= 0x03; // pg 668 gpio alternate function select 0b11 is for PA0 and PA1
   GPIO_PORTA_DEN_R   |= 0x03;
-  GPIO_PORTA_PCTL_R  |= 0x11;
+  GPIO_PORTA_PCTL_R  |= (GPIO_PCTL_PA0_U0RX|GPIO_PCTL_PA1_U0TX ); //pg 686 port mux control
   GPIO_PORTA_DR2R_R  |= 0x03;
   
   // configure UART0 for 115200bps operation
@@ -75,7 +75,8 @@ void USB_UART_Init(void){
   UART0_IFLS_R |= UART_IFLS_RX1_8;                  // RX FIFO interrupt threshold >= 1/8th full
   UART0_IFLS_R |= UART_IFLS_TX1_8;                  // TX FIFO interrupt threshold <= 4/8th full
   UART0_IM_R  |= (UART_IM_RXIM | UART_IM_RTIM);     // enable interupt on RX and RX transmission end
-  UART0_IM_R  |= UART_IM_TXIM;                      // enable interrupt on TX
+ //UART0_IM_R  |= UART_IM_TXIM;                     // enable interrupt on TX
+	UART0_IM_R  &= UART_IM_TXIM;                      // disable interrupt on TX
   UART0_CTL_R |= UART_CTL_UARTEN;                   // set UART0 enable bit    
 }
 
