@@ -6,7 +6,7 @@ Section Cross References
 
     startup.o(RESET) refers to startup.o(STACK) for StackMem
     startup.o(RESET) refers to os.o(i.SysTick_Handler) for SysTick_Handler
-    startup.o(RESET) refers to usb_uart.o(i.UART1_Handler) for UART1_Handler
+    startup.o(RESET) refers to usb_uart.o(i.UART0_Handler) for UART0_Handler
     startup.o(RESET) refers to adc.o(i.ADC0Seq3_Handler) for ADC0Seq3_Handler
     startup.o(RESET) refers to adc.o(i.Timer0A_Handler) for Timer0A_Handler
     startup.o(RESET) refers to entry.o(.ARM.Collect$$$$00000000) for __main
@@ -135,8 +135,8 @@ Section Cross References
     usb_uart.o(i.TxFifo_Put) refers to usb_uart.o(.data) for TxPutPt
     usb_uart.o(i.TxFifo_Put) refers to usb_uart.o(.bss) for TxFifo
     usb_uart.o(i.TxFifo_Size) refers to usb_uart.o(.data) for TxPutPt
-    usb_uart.o(i.UART1_Handler) refers to usb_uart.o(i.USB_UART_HandleRXBuffer) for USB_UART_HandleRXBuffer
-    usb_uart.o(i.UART1_Handler) refers to usb_uart.o(.data) for RAW_INT_STAT
+    usb_uart.o(i.UART0_Handler) refers to usb_uart.o(i.USB_UART_HandleRXBuffer) for USB_UART_HandleRXBuffer
+    usb_uart.o(i.UART0_Handler) refers to usb_uart.o(.data) for RAW_INT_STAT
     usb_uart.o(i.USB_UART_HandleRXBuffer) refers to usb_uart.o(i.USB_UART_PrintChar) for USB_UART_PrintChar
     usb_uart.o(i.USB_UART_HandleRXBuffer) refers to usb_uart.o(i.RxFifo_Put) for RxFifo_Put
     usb_uart.o(i.USB_UART_HandleRXBuffer) refers to usb_uart.o(i.RxFifo_Pop) for RxFifo_Pop
@@ -777,7 +777,7 @@ Image Symbol Table
     i.SysTick_Handler                        0x0000069c   Section        0  os.o(i.SysTick_Handler)
     i.Timer0A_Handler                        0x00000700   Section        0  adc.o(i.Timer0A_Handler)
     i.TxFifo_Init                            0x00000760   Section        0  usb_uart.o(i.TxFifo_Init)
-    i.UART1_Handler                          0x00000788   Section        0  usb_uart.o(i.UART1_Handler)
+    i.UART0_Handler                          0x00000788   Section        0  usb_uart.o(i.UART0_Handler)
     i.USB_UART_Enable_Interrupt              0x00000814   Section        0  usb_uart.o(i.USB_UART_Enable_Interrupt)
     i.USB_UART_HandleRXBuffer                0x0000082c   Section        0  usb_uart.o(i.USB_UART_HandleRXBuffer)
     i.USB_UART_Init                          0x00000888   Section        0  usb_uart.o(i.USB_UART_Init)
@@ -971,7 +971,7 @@ Image Symbol Table
     Timer4B_Handler                          0x00000283   Thumb Code     0  startup.o(RESET)
     Timer5A_Handler                          0x00000283   Thumb Code     0  startup.o(RESET)
     Timer5B_Handler                          0x00000283   Thumb Code     0  startup.o(RESET)
-    UART0_Handler                            0x00000283   Thumb Code     0  startup.o(RESET)
+    UART1_Handler                            0x00000283   Thumb Code     0  startup.o(RESET)
     UART2_Handler                            0x00000283   Thumb Code     0  startup.o(RESET)
     UART3_Handler                            0x00000283   Thumb Code     0  startup.o(RESET)
     UART4_Handler                            0x00000283   Thumb Code     0  startup.o(RESET)
@@ -1027,7 +1027,7 @@ Image Symbol Table
     SysTick_Handler                          0x0000069d   Thumb Code    86  os.o(i.SysTick_Handler)
     Timer0A_Handler                          0x00000701   Thumb Code    72  adc.o(i.Timer0A_Handler)
     TxFifo_Init                              0x00000761   Thumb Code    26  usb_uart.o(i.TxFifo_Init)
-    UART1_Handler                            0x00000789   Thumb Code   116  usb_uart.o(i.UART1_Handler)
+    UART0_Handler                            0x00000789   Thumb Code   116  usb_uart.o(i.UART0_Handler)
     USB_UART_Enable_Interrupt                0x00000815   Thumb Code    18  usb_uart.o(i.USB_UART_Enable_Interrupt)
     USB_UART_HandleRXBuffer                  0x0000082d   Thumb Code    82  usb_uart.o(i.USB_UART_HandleRXBuffer)
     USB_UART_Init                            0x00000889   Thumb Code   210  usb_uart.o(i.USB_UART_Init)
@@ -1117,7 +1117,7 @@ Memory Map of the image
     0x0000069c   0x00000064   Code   RO          789    i.SysTick_Handler   os.o
     0x00000700   0x00000060   Code   RO          729    i.Timer0A_Handler   adc.o
     0x00000760   0x00000028   Code   RO          388    i.TxFifo_Init       usb_uart.o
-    0x00000788   0x0000008c   Code   RO          392    i.UART1_Handler     usb_uart.o
+    0x00000788   0x0000008c   Code   RO          392    i.UART0_Handler     usb_uart.o
     0x00000814   0x00000018   Code   RO          394    i.USB_UART_Enable_Interrupt  usb_uart.o
     0x0000082c   0x0000005c   Code   RO          395    i.USB_UART_HandleRXBuffer  usb_uart.o
     0x00000888   0x000000ec   Code   RO          396    i.USB_UART_Init     usb_uart.o

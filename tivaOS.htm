@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\tivaOS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\tivaOS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sun Aug 09 15:19:25 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sun Aug 09 18:29:08 2015
 <BR><P>
 <H3>Maximum Stack Usage =         88 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -136,8 +136,8 @@ Function Pointers
  <LI><a href="#[4d]">Timer4B_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[4e]">Timer5A_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[4f]">Timer5B_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
- <LI><a href="#[f]">UART0_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
- <LI><a href="#[10]">UART1_Handler</a> from usb_uart.o(i.UART1_Handler) referenced from startup.o(RESET)
+ <LI><a href="#[f]">UART0_Handler</a> from usb_uart.o(i.UART0_Handler) referenced from startup.o(RESET)
+ <LI><a href="#[10]">UART1_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[2b]">UART2_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[45]">UART3_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
  <LI><a href="#[46]">UART4_Handler</a> from startup.o(RESET) referenced from startup.o(RESET)
@@ -495,7 +495,7 @@ Global Symbols
 <P><STRONG><a name="[4f]"></a>Timer5B_Handler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup.o(RESET))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
-<P><STRONG><a name="[f]"></a>UART0_Handler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup.o(RESET))
+<P><STRONG><a name="[10]"></a>UART1_Handler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup.o(RESET))
 <BR>[Address Reference Count : 1]<UL><LI> startup.o(RESET)
 </UL>
 <P><STRONG><a name="[2b]"></a>UART2_Handler</STRONG> (Thumb, 0 bytes, Stack size 0 bytes, startup.o(RESET))
@@ -728,8 +728,8 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[96]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_Init
 </UL>
 
-<P><STRONG><a name="[10]"></a>UART1_Handler</STRONG> (Thumb, 116 bytes, Stack size 4 bytes, usb_uart.o(i.UART1_Handler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = UART1_Handler &rArr; USB_UART_HandleRXBuffer
+<P><STRONG><a name="[f]"></a>UART0_Handler</STRONG> (Thumb, 116 bytes, Stack size 4 bytes, usb_uart.o(i.UART0_Handler))
+<BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = UART0_Handler &rArr; USB_UART_HandleRXBuffer
 </UL>
 <BR>[Calls]<UL><LI><a href="#[92]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_HandleRXBuffer
 </UL>
@@ -746,7 +746,7 @@ Global Symbols
 <LI><a href="#[95]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RxFifo_Pop
 <LI><a href="#[93]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
 </UL>
-<BR>[Called By]<UL><LI><a href="#[10]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART1_Handler
+<BR>[Called By]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_Handler
 </UL>
 
 <P><STRONG><a name="[96]"></a>USB_UART_Init</STRONG> (Thumb, 210 bytes, Stack size 8 bytes, usb_uart.o(i.USB_UART_Init))
