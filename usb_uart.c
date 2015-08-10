@@ -186,10 +186,10 @@ typedef enum e_KEY
 
 
 KeyType key = INVALID_KEY;				//delare debug variable
-uint8_t read_counter=0; 					//fifo read count
-bool FIRST_CODE, SECOND_CODE, THIRD_CODE =INVALID_CODE; //
-int count=0;       								//interrupt count
 
+//int count=0;       								//interrupt count
+void Decode_ESC_SEQ(char letter);
+static uint8_t read_counter=0; 					//fifo read count
 void USB_UART_HandleRXBuffer(void){
 		char letter;
 		
@@ -218,63 +218,60 @@ void USB_UART_HandleRXBuffer(void){
 				// START ESCAPE SEQUENCE CODE
 				// 27 91 'D' or 'C' or 'B' or 'A'
 				// 				Left   Right  Down   Up
-				
-				if (letter == 27){
-						read_counter=0;																									// first hit so we reset counter
-						FIRST_CODE=VALID_CODE;																						// first match
-																																				// move on to second code	
-				} else if (letter == 91 && read_counter == 1 && FIRST_CODE==VALID_CODE){ 	// if first and second code in sequence are correct
-						SECOND_CODE = VALID_CODE;																					// second match
-																																				// move on to third code																		
-				}	else if (read_counter == 2 && SECOND_CODE==VALID_CODE )	{ 							// third and last code check
-	
-																																			// previous two codes matched escape sequence
-										//reset counter to prevent false validation due to previous valid state	
-					read_counter=0; 
-					switch(letter){
-						case 68:
-							THIRD_CODE=VALID_CODE;
-							key=LEFT_ARROW_KEY;
-						//TODO: add code to move fifo pointer similar to backspace code
-							continue;
-						case 67:
-							THIRD_CODE=VALID_CODE;
-							key=RIGHT_ARROW_KEY;
-						//TODO: add code to move fifo pointer similar to backspace code
-							continue;
-						case 66:
-							THIRD_CODE=VALID_CODE;
-							key=DOWN_ARROW_KEY;
-							//TODO: add code.  Need 2D SW fifo array
-							continue;
-						case 65:
-							THIRD_CODE=VALID_CODE;
-							key=UP_ARROW_KEY;
-							//TODO: add code.  Need 2D SW fifo array
-							continue;
-						default:
-							THIRD_CODE=INVALID_CODE; //invalid 3rd code
-							key = INVALID_KEY;
-							continue;						
-					}
-				}	else{
-						// either code1 or code2 is wrong so skip to next iteration inside while loop 
-						FIRST_CODE=INVALID_CODE;
-						SECOND_CODE=INVALID_CODE;
-					  // reset previous third code
-						THIRD_CODE=INVALID_CODE;
-						key = INVALID_KEY;
-						continue; //skip counter code
+			
+				//First code filter to reduce bandwidth (i.e. this is not used as often as other keys)
+				//if first letter is not the starter code we can skip the rest
+				// on non-zero read_counter letter is allowed to have number other than 27
+				if(letter != 27 && read_counter == 0){ 
+				  // do nothing
+				} else{
+						Decode_ESC_SEQ(letter);
 				}
+				// END ESCAPE SEQUENCE CODE			
 				
-						
-		read_counter++; // fifo read count 
-				// END ESCAPE SEQUENCE CODE
-		} //end while
-
+		} //end HW FIFO read 
 		
+} //end RX handle
 
-		
+// decode escape sequence function
+void Decode_ESC_SEQ(char letter){
+
+		if (letter == 27 && read_counter == 0){																											
+				read_counter++;														// first match												
+
+																										
+		} else if (letter == 91 && read_counter == 1){ 	// move on to second code																															// if first and second code in sequence are correct
+				read_counter++;	// second match
+																																																	
+		}	else if (read_counter == 2 )	{ 						// third and last code check
+																									// previous two codes matched escape sequence
+																									//reset counter to prevent false validation due to previous valid state	
+			read_counter=0; 
+			switch(letter){
+				case 68:							
+					key=LEFT_ARROW_KEY;
+				//TODO: add code to move fifo pointer similar to backspace code
+					break;
+				case 67:								
+					key=RIGHT_ARROW_KEY;
+				//TODO: add code to move fifo pointer similar to backspace code
+					break;
+				case 66:							
+					key=DOWN_ARROW_KEY;
+					//TODO: add code.  Need 2D SW fifo array
+					break;
+				case 65:						
+					key=UP_ARROW_KEY;
+					//TODO: add code.  Need 2D SW fifo array
+					break;
+				default:	
+					key = INVALID_KEY;
+					break;					
+			}
+		}	else{
+				read_counter=0;		// reset
+				key = INVALID_KEY;		// either code1 or code2 is wrong so skip to next iteration inside while loop 
+		}										
 }
 
 /*
