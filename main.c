@@ -94,7 +94,7 @@ int main(void){
   //////////////////////// main loop ////////////////////////    
 	
   while(1){
-		
+			
     WaitForInterrupt();
 /*
     if (updateScreen){

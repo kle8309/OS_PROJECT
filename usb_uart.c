@@ -169,8 +169,32 @@ void USB_UART_PrintChar(char input){
    - puts a character in the software FIFO, with a few special execptions
 ===================================================================================================
 */
+// Use for setting the RX status of the 3 escape sequence codes
+#define INVALID_CODE false
+#define VALID_CODE true
+	
+//arrow key enum
+typedef enum e_KEY
+{
+		INVALID_KEY=0,
+    LEFT_ARROW_KEY,
+    RIGHT_ARROW_KEY,
+    DOWN_ARROW_KEY,
+		UP_ARROW_KEY
+	  
+} KeyType;
+
+
+KeyType key = INVALID_KEY;				//delare debug variable
+uint8_t read_counter=0; 					//fifo read count
+bool FIRST_CODE, SECOND_CODE, THIRD_CODE =INVALID_CODE; //
+int count=0;       								//interrupt count
+
 void USB_UART_HandleRXBuffer(void){
 		char letter;
+		
+	  //count++; //uart interrupt count DEBUG
+	
 		while((UART0_FR_R & UART_FR_RXFE) == 0){					// if UART Receive FIFO is not Empty (1 means empty)
 				letter = UART0_DR_R; 														// copy from RX HW fifo to memory
 				USB_UART_PrintChar(letter);                     // echo typed character back to user terminal
@@ -191,8 +215,66 @@ void USB_UART_HandleRXBuffer(void){
 				} else {
 					RxFifo_Put(letter);                           // put char in fifo
 				}
+				// START ESCAPE SEQUENCE CODE
+				// 27 91 'D' or 'C' or 'B' or 'A'
+				// 				Left   Right  Down   Up
+				
+				if (letter == 27){
+						read_counter=0;																									// first hit so we reset counter
+						FIRST_CODE=VALID_CODE;																						// first match
+																																				// move on to second code	
+				} else if (letter == 91 && read_counter == 1 && FIRST_CODE==VALID_CODE){ 	// if first and second code in sequence are correct
+						SECOND_CODE = VALID_CODE;																					// second match
+																																				// move on to third code																		
+				}	else if (read_counter == 2 && SECOND_CODE==VALID_CODE )	{ 							// third and last code check
+	
+																																			// previous two codes matched escape sequence
+										//reset counter to prevent false validation due to previous valid state	
+					read_counter=0; 
+					switch(letter){
+						case 68:
+							THIRD_CODE=VALID_CODE;
+							key=LEFT_ARROW_KEY;
+						//TODO: add code to move fifo pointer similar to backspace code
+							continue;
+						case 67:
+							THIRD_CODE=VALID_CODE;
+							key=RIGHT_ARROW_KEY;
+						//TODO: add code to move fifo pointer similar to backspace code
+							continue;
+						case 66:
+							THIRD_CODE=VALID_CODE;
+							key=DOWN_ARROW_KEY;
+							//TODO: add code.  Need 2D SW fifo array
+							continue;
+						case 65:
+							THIRD_CODE=VALID_CODE;
+							key=UP_ARROW_KEY;
+							//TODO: add code.  Need 2D SW fifo array
+							continue;
+						default:
+							THIRD_CODE=INVALID_CODE; //invalid 3rd code
+							key = INVALID_KEY;
+							continue;						
+					}
+				}	else{
+						// either code1 or code2 is wrong so skip to next iteration inside while loop 
+						FIRST_CODE=INVALID_CODE;
+						SECOND_CODE=INVALID_CODE;
+					  // reset previous third code
+						THIRD_CODE=INVALID_CODE;
+						key = INVALID_KEY;
+						continue; //skip counter code
+				}
+				
+						
+		read_counter++; // fifo read count 
+				// END ESCAPE SEQUENCE CODE
+		} //end while
+
 		
-		}
+
+		
 }
 
 /*
