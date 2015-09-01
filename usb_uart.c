@@ -208,28 +208,30 @@ void USB_UART_HandleRXBuffer(void){
 					
 				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
 					 // do nothing
-				} else if (letter == 8) {                       // handle backspace
+				} else if (letter == 127) {                    // handle backspace
 					RxFifo_Pop();                                 // remove a char from the end of the fifo
-					USB_UART_PrintChar(8);                        // return a backspace to the user
-					USB_UART_PrintChar(' ');                      // clear char on uart
-				} else {
-					RxFifo_Put(letter);                           // put char in fifo
-				}
-				// START ESCAPE SEQUENCE CODE
-				// 27 91 'D' or 'C' or 'B' or 'A'
-				// 				Left   Right  Down   Up
+				}	else {
+					// START ESCAPE SEQUENCE CODE
+					// 27 91 'D' or 'C' or 'B' or 'A'
+					// 				Left   Right  Down   Up
 			
-				//First code filter to reduce bandwidth (i.e. this is not used as often as other keys)
-				//if first letter is not the starter code we can skip the rest
-				// on non-zero read_counter letter is allowed to have number other than 27
-				if(letter != 27 && read_counter == 0){ 
-				  // do nothing
-				} else{
+					//First code filter to reduce bandwidth (i.e. this is not used as often as other keys)
+					//if first letter is not the starter code we can skip the rest
+					// on non-zero read_counter letter is allowed to have number other than 27
+					if(letter != 27 && read_counter == 0){ 
+					  RxFifo_Put(letter);          // if not one of the escape codes put char in fifo
+																				 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
+																				 // these code are ignored in SW FIFO
+																				 // if need to support for some odd reason, a patch is needed
+					} else{
 						Decode_ESC_SEQ(letter);
-				}
-				// END ESCAPE SEQUENCE CODE			
+					}
+					// END ESCAPE SEQUENCE CODE					
+	
+				} // END letter condition
 				
-		} //end HW FIFO read 
+				
+		} //end HW FIFO read while
 		
 } //end RX handle
 
@@ -238,22 +240,23 @@ void Decode_ESC_SEQ(char letter){
 
 		if (letter == 27 && read_counter == 0){																											
 				read_counter++;														// first match												
-
 																										
 		} else if (letter == 91 && read_counter == 1){ 	// move on to second code																															// if first and second code in sequence are correct
 				read_counter++;	// second match
 																																																	
 		}	else if (read_counter == 2 )	{ 						// third and last code check
 																									// previous two codes matched escape sequence
-																									//reset counter to prevent false validation due to previous valid state	
+																									// reset counter to prevent false validation due to previous valid state	
 			read_counter=0; 
 			switch(letter){
 				case 68:							
 					key=LEFT_ARROW_KEY;
+					RxFifo_Shift_L();
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 67:								
 					key=RIGHT_ARROW_KEY;
+					RxFifo_Shift_R();
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 66:							

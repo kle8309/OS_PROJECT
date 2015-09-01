@@ -67,7 +67,7 @@ unsigned short NAME ## Fifo_Size (void){  \
 // SIZE must be a power of two
 // creates TxFifo_Init() TxFifo_Get() and TxFifo_Put()
 
-// macro to create a pointer FIFO
+// macro to create a pointer FIFO--------------------------------
 #define AddPointerFifo(NAME,SIZE,TYPE,SUCCESS,FAIL) \
 TYPE volatile *NAME ## PutPt;    \
 TYPE volatile *NAME ## GetPt;    \
@@ -97,9 +97,34 @@ int NAME ## Fifo_Pop (void) {           \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
+	*( NAME ## PutPt ) = NULL;				    \
   nextPutPt = NAME ## PutPt - 1;        \
   if(nextPutPt < &NAME ## Fifo[0]){     \
     nextPutPt = &NAME ## Fifo[SIZE];    \
+  }                                     \
+  NAME ## PutPt = nextPutPt;            \
+  return(SUCCESS);                      \
+}                                       \
+int NAME ## Fifo_Shift_L (void) {       \
+  TYPE volatile *nextPutPt;             \
+  if(NAME## PutPt == NAME ## GetPt ){   \
+    return(FAIL);                       \
+  }                                     \
+  nextPutPt = NAME ## PutPt - 1;        \
+  if(nextPutPt < &NAME ## Fifo[0]){     \
+    nextPutPt = &NAME ## Fifo[SIZE];    \
+  }                                     \
+  NAME ## PutPt = nextPutPt;            \
+  return(SUCCESS);                      \
+}                                       \
+int NAME ## Fifo_Shift_R (void) {       \
+  TYPE volatile *nextPutPt;             \
+  if(NAME## PutPt == NAME ## GetPt ){   \
+    return(FAIL);                       \
+  }                                     \
+  nextPutPt = NAME ## PutPt + 1;        \
+  if(nextPutPt > &NAME ## Fifo[SIZE]){     \
+    nextPutPt = &NAME ## Fifo[0];    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
