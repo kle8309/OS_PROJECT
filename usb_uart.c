@@ -193,7 +193,7 @@ KeyType key = INVALID_KEY;				//delare debug variable
 void Decode_ESC_SEQ(char letter);
 static uint8_t read_counter=0; 					//fifo read count
 
-long Fifo_Depth = 0;
+uint32_t Fifo_Depth = 0;
 
 void USB_UART_HandleRXBuffer(void){
 		char letter;
@@ -211,7 +211,10 @@ void USB_UART_HandleRXBuffer(void){
 					// \r indicates user has pressed Enter key
 					// increment Fifo_Depth
 					RxFifo_Put(0, Fifo_Depth++);                  // 0 null terminate buffer
+					// move get and put pointers to next fifo level
+					RxFifo_reInit(Fifo_Depth);
 					
+				
 					if(Fifo_Depth>SIZE_DEPTH){										// wraparound when greater than max fifo depth
 						Fifo_Depth=0; 
 					}

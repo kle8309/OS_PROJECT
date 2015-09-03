@@ -77,7 +77,12 @@ void NAME ## Fifo_Init(void){ long sr;  \
   NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
   EndCritical(sr);                      \
 }                                       \
-int NAME ## Fifo_Put (TYPE data, long depth){       \
+void NAME ## Fifo_reInit(uint32_t depth){ long sr;  \
+  sr = StartCritical();                 \
+	NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[depth][0]; \
+	EndCritical(sr);                      \
+}                                       \
+int NAME ## Fifo_Put (TYPE data, uint32_t depth){       \
   TYPE volatile *nextPutPt;             \
   nextPutPt = NAME ## PutPt + 1;        \
   if(nextPutPt == &NAME ## Fifo[depth][SIZE_WIDTH]){ \
@@ -92,7 +97,7 @@ int NAME ## Fifo_Put (TYPE data, long depth){       \
     return(SUCCESS);                    \
   }                                     \
 }                                       \
-int NAME ## Fifo_Pop (long depth) {           \
+int NAME ## Fifo_Pop (uint32_t depth) {           \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
@@ -105,7 +110,7 @@ int NAME ## Fifo_Pop (long depth) {           \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Shift_L (long depth) {       \
+int NAME ## Fifo_Shift_L (uint32_t depth) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
@@ -117,7 +122,7 @@ int NAME ## Fifo_Shift_L (long depth) {       \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Shift_R (long depth) {       \
+int NAME ## Fifo_Shift_R (uint32_t depth) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
@@ -129,7 +134,7 @@ int NAME ## Fifo_Shift_R (long depth) {       \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Get (TYPE *datapt, long depth){    \
+int NAME ## Fifo_Get (TYPE *datapt, uint32_t depth){    \
   if( NAME ## PutPt == NAME ## GetPt ){ \
     return(FAIL);                       \
   }                                     \

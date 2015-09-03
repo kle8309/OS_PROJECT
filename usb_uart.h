@@ -28,7 +28,7 @@ void UART0_Handler(void);
 ==========                                         USB UART FUNCTIONS                                         ==========
 ========================================================================================================================
 */
-extern long Fifo_Depth;
+extern uint32_t Fifo_Depth;
 
 
 #endif

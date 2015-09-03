@@ -1,6 +1,6 @@
 #include "interpreter.h"
 //#include "command2.h"
-extern uint32_t RxFifo_Get(char*,long);
+extern uint32_t RxFifo_Get(char*,uint32_t);
 
 /*
 ========================================================================================================================
