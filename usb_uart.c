@@ -8,6 +8,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "usb_uart.h"
+#include <string.h>
 
 
 /*
@@ -194,6 +195,7 @@ void Decode_ESC_SEQ(char letter);
 static uint8_t read_counter=0; 					//fifo read count
 
 uint32_t Fifo_Depth = 0;
+uint32_t last_Fifo = 0;
 
 void USB_UART_HandleRXBuffer(void){
 		char letter;
@@ -202,11 +204,13 @@ void USB_UART_HandleRXBuffer(void){
 	
 		while((UART0_FR_R & UART_FR_RXFE) == 0){					// if UART Receive FIFO is not Empty (1 means empty)
 				letter = UART0_DR_R; 														// copy from RX HW fifo to memory
-				USB_UART_PrintChar(letter);                     // echo typed character back to user terminal
+				//USB_UART_PrintChar(letter);                     // echo typed character back to user terminal
 				
-				// take a character from the hardware fifo
+				// cmd Entered
 				if (letter =='\r') {   
 					
+					USB_UART_PrintChar(letter); 				 //echo to terminal
+					USB_UART_PrintChar('\n'); 				   //echo to terminal	unless set to implicit form feed \n for \r					
 					// don't put \r in sw fifo
 					// \r indicates user has pressed Enter key
 					// increment Fifo_Depth
@@ -214,16 +218,24 @@ void USB_UART_HandleRXBuffer(void){
 					// move get and put pointers to next fifo level
 					RxFifo_reInit(Fifo_Depth);
 					
-				
-					if(Fifo_Depth>SIZE_DEPTH){										// wraparound when greater than max fifo depth
+				  //Fifo_Depth will be at least 1 at this point
+					//b/c the increment
+					if(Fifo_Depth==SIZE_DEPTH){										// wraparound when greater than max fifo depth
 						Fifo_Depth=0; 
+						last_Fifo=SIZE_DEPTH;
+					}	else if(Fifo_Depth>0){
+						last_Fifo=Fifo_Depth;
+					} else{
+						//last_Fifo=0;
 					}
 					
 					USB_BufferReady = true;                       // toggle buffer processing semaphore
 					
 				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
+						USB_UART_PrintChar(letter); 				 //echo to terminal	
 					 // do nothing
 				} else if (letter == 127) {                    // handle backspace
+					USB_UART_PrintChar(letter); 				 //echo to terminal	
 					RxFifo_Pop(Fifo_Depth);                      // remove a char from the end of the fifo
 				}	else {
 					// START ESCAPE SEQUENCE CODE
@@ -233,7 +245,8 @@ void USB_UART_HandleRXBuffer(void){
 					//First code filter to reduce bandwidth (i.e. this is not used as often as other keys)
 					//if first letter is not the starter code we can skip the rest
 					// on non-zero read_counter letter is allowed to have number other than 27
-					if(letter != 27 && read_counter == 0){ 
+					if(letter != 27 && read_counter == 0){
+						USB_UART_PrintChar(letter); 				 //echo to terminal	
 					  RxFifo_Put(letter,Fifo_Depth);       // if not one of the escape codes put char in fifo
 																								 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
 																								 // these code are ignored in SW FIFO
@@ -252,6 +265,7 @@ void USB_UART_HandleRXBuffer(void){
 } //end RX handle
 
 // decode escape sequence function
+
 void Decode_ESC_SEQ(char letter){
 
 		if (letter == 27 && read_counter == 0){																											
@@ -265,12 +279,14 @@ void Decode_ESC_SEQ(char letter){
 																									// reset counter to prevent false validation due to previous valid state	
 			read_counter=0; 
 			switch(letter){
-				case 68:							
+				case 68:
+					USB_UART_PrintChar(letter); 				 //echo to terminal						
 					key=LEFT_ARROW_KEY;
 					RxFifo_Shift_L(Fifo_Depth);
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
-				case 67:								
+				case 67:
+					USB_UART_PrintChar(letter); 				 //echo to terminal						
 					key=RIGHT_ARROW_KEY;
 					RxFifo_Shift_R(Fifo_Depth);
 				//TODO: add code to move fifo pointer similar to backspace code
@@ -278,6 +294,17 @@ void Decode_ESC_SEQ(char letter){
 				case 66:							
 					key=DOWN_ARROW_KEY;
 					//TODO: add code.  Need 2D SW fifo array
+				 if(last_Fifo>0){ // bug detect at 0 to 5 (required two down clicks)
+					last_Fifo--;
+				 }else{
+					last_Fifo=Fifo_Depth-1; // wrap bug if press down arrow without first entering a cmd
+																	// because Fifo_Depth needs to be at least 1
+																	// w/o entering a cmd bypasses this requirement
+				 }
+				  //puts("")
+				  char s[64] = {'\0'};
+				  printf("%s\r",s); //clear line
+					printf("%s\r",RxFifo[last_Fifo]); //print previous command
 					break;
 				case 65:						
 					key=UP_ARROW_KEY;
