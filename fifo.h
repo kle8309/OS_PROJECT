@@ -68,20 +68,20 @@ unsigned short NAME ## Fifo_Size (void){  \
 // creates TxFifo_Init() TxFifo_Get() and TxFifo_Put()
 
 // macro to create a pointer FIFO--------------------------------
-#define AddPointerFifo(NAME,SIZE,TYPE,SUCCESS,FAIL) \
+#define AddPointerFifo(NAME,SIZE_DEPTH,SIZE_WIDTH,TYPE,SUCCESS,FAIL) \
 TYPE volatile *NAME ## PutPt;    \
 TYPE volatile *NAME ## GetPt;    \
-TYPE static NAME ## Fifo [SIZE];        \
+TYPE static NAME ## Fifo [SIZE_DEPTH][SIZE_WIDTH];        \
 void NAME ## Fifo_Init(void){ long sr;  \
   sr = StartCritical();                 \
-  NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0]; \
+  NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
   EndCritical(sr);                      \
 }                                       \
-int NAME ## Fifo_Put (TYPE data){       \
+int NAME ## Fifo_Put (TYPE data, long depth){       \
   TYPE volatile *nextPutPt;             \
   nextPutPt = NAME ## PutPt + 1;        \
-  if(nextPutPt == &NAME ## Fifo[SIZE]){ \
-    nextPutPt = &NAME ## Fifo[0];       \
+  if(nextPutPt == &NAME ## Fifo[depth][SIZE_WIDTH]){ \
+    nextPutPt = &NAME ## Fifo[depth][0];       \
   }                                     \
   if(nextPutPt == NAME ## GetPt ){      \
     return(FAIL);                       \
@@ -92,56 +92,56 @@ int NAME ## Fifo_Put (TYPE data){       \
     return(SUCCESS);                    \
   }                                     \
 }                                       \
-int NAME ## Fifo_Pop (void) {           \
+int NAME ## Fifo_Pop (long depth) {           \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
 	*( NAME ## PutPt ) = NULL;				    \
   nextPutPt = NAME ## PutPt - 1;        \
-  if(nextPutPt < &NAME ## Fifo[0]){     \
-    nextPutPt = &NAME ## Fifo[SIZE];    \
+  if(nextPutPt < &NAME ## Fifo[depth][0]){     \
+    nextPutPt = &NAME ## Fifo[depth][SIZE_WIDTH];    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Shift_L (void) {       \
+int NAME ## Fifo_Shift_L (long depth) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
   nextPutPt = NAME ## PutPt - 1;        \
-  if(nextPutPt < &NAME ## Fifo[0]){     \
-    nextPutPt = &NAME ## Fifo[SIZE];    \
+  if(nextPutPt < &NAME ## Fifo[depth][0]){     \
+    nextPutPt = &NAME ## Fifo[depth][SIZE_WIDTH];    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Shift_R (void) {       \
+int NAME ## Fifo_Shift_R (long depth) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
   nextPutPt = NAME ## PutPt + 1;        \
-  if(nextPutPt > &NAME ## Fifo[SIZE]){     \
-    nextPutPt = &NAME ## Fifo[0];    \
+  if(nextPutPt > &NAME ## Fifo[depth][SIZE_WIDTH]){     \
+    nextPutPt = &NAME ## Fifo[depth][0];    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Get (TYPE *datapt){    \
+int NAME ## Fifo_Get (TYPE *datapt, long depth){    \
   if( NAME ## PutPt == NAME ## GetPt ){ \
     return(FAIL);                       \
   }                                     \
   *datapt = *( NAME ## GetPt ## ++);    \
-  if( NAME ## GetPt == &NAME ## Fifo[SIZE]){ \
-    NAME ## GetPt = &NAME ## Fifo[0];   \
+  if( NAME ## GetPt == &NAME ## Fifo[depth][SIZE_WIDTH]){ \
+    NAME ## GetPt = &NAME ## Fifo[depth][0];   \
   }                                     \
   return(SUCCESS);                      \
 }                                       \
 unsigned short NAME ## Fifo_Size (void){\
   if( NAME ## PutPt < NAME ## GetPt ){  \
-    return ((unsigned short)( NAME ## PutPt - NAME ## GetPt + (SIZE*sizeof(TYPE)))/sizeof(TYPE)); \
+    return ((unsigned short)( NAME ## PutPt - NAME ## GetPt + (SIZE_WIDTH*sizeof(TYPE)))/sizeof(TYPE)); \
   }                                     \
   return ((unsigned short)( NAME ## PutPt - NAME ## GetPt )/sizeof(TYPE)); \
 }
@@ -149,5 +149,6 @@ unsigned short NAME ## Fifo_Size (void){\
 // AddPointerFifo(Rx,32,unsigned char, 1,0)
 // SIZE can be any size
 // creates RxFifo_Init() RxFifo_Get() and RxFifo_Put()
-
+// note that since PutPt and GetPt are being reused for each FIFO level
+// Fifo_Size will return the size of the current FIFO level
 #endif //  __FIFO_H__

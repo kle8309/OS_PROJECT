@@ -9,9 +9,10 @@
 .\main.o: C:\Keil\ARM\ARMCC\bin\..\include\string.h
 .\main.o: pll.h
 .\main.o: st7735.h
-.\main.o: usb_uart.h
 .\main.o: systick.h
 .\main.o: pwm.h
 .\main.o: adc.h
 .\main.o: timer0.h
 .\main.o: interpreter.h
+.\main.o: usb_uart.h
+.\main.o: fifo.h

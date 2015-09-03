@@ -1,5 +1,5 @@
 #include "tm4c123gh6pm.h"
-#include "usb_uart.h"
+
 
 #include "interpreter.h"
 #include "fifo.h"
@@ -7,7 +7,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <stdbool.h>
-
+#include "usb_uart.h"
 
 
 /*
@@ -16,9 +16,11 @@
 ========================================================================================================================
 */
 
-#define FIFOSIZE   64         // size of the FIFOs (must be power of 2)
-#define FIFOSUCCESS 1         // return value on success
-#define FIFOFAIL    0         // return value on failure
+//#define FIFOSIZE   64         // size of the FIFOs (must be power of 2)
+//#define SIZE_DEPTH   8         // size of the FIFOs (must be power of 2)
+//#define SIZE_WIDTH   64         // size of the FIFOs (must be power of 2)
+//#define FIFOSUCCESS 1         // return value on success
+//#define FIFOFAIL    0         // return value on failure
 
 /*
 ========================================================================================================================
@@ -35,8 +37,8 @@ bool USB_BufferReady = false;
 */
 
 // create index implementation FIFO (see FIFO.h)
-AddPointerFifo(Rx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
-AddPointerFifo(Tx, FIFOSIZE, char, FIFOSUCCESS, FIFOFAIL)
+AddPointerFifo(Rx, SIZE_DEPTH,SIZE_WIDTH, char, FIFOSUCCESS, FIFOFAIL)
+AddPointerFifo(Tx, SIZE_DEPTH,SIZE_WIDTH, char, FIFOSUCCESS, FIFOFAIL)
 
 /*
 ===================================================================================================
@@ -190,6 +192,9 @@ KeyType key = INVALID_KEY;				//delare debug variable
 //int count=0;       								//interrupt count
 void Decode_ESC_SEQ(char letter);
 static uint8_t read_counter=0; 					//fifo read count
+
+long Fifo_Depth = 0;
+
 void USB_UART_HandleRXBuffer(void){
 		char letter;
 		
@@ -202,14 +207,21 @@ void USB_UART_HandleRXBuffer(void){
 				// take a character from the hardware fifo
 				if (letter =='\r') {   
 					
-					// new line, don't put in buffer
-					RxFifo_Put(0);                                // null terminate buffer
+					// don't put \r in sw fifo
+					// \r indicates user has pressed Enter key
+					// increment Fifo_Depth
+					RxFifo_Put(0, Fifo_Depth++);                    // null terminate buffer
+					
+					if(Fifo_Depth>SIZE_DEPTH){										// wraparound when greater than max fifo depth
+						Fifo_Depth=0; 
+					}
+					
 					USB_BufferReady = true;                       // toggle buffer processing semaphore
 					
 				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
 					 // do nothing
 				} else if (letter == 127) {                    // handle backspace
-					RxFifo_Pop();                                 // remove a char from the end of the fifo
+					RxFifo_Pop(Fifo_Depth);                      // remove a char from the end of the fifo
 				}	else {
 					// START ESCAPE SEQUENCE CODE
 					// 27 91 'D' or 'C' or 'B' or 'A'
@@ -219,10 +231,11 @@ void USB_UART_HandleRXBuffer(void){
 					//if first letter is not the starter code we can skip the rest
 					// on non-zero read_counter letter is allowed to have number other than 27
 					if(letter != 27 && read_counter == 0){ 
-					  RxFifo_Put(letter);          // if not one of the escape codes put char in fifo
-																				 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
-																				 // these code are ignored in SW FIFO
-																				 // if need to support for some odd reason, a patch is needed
+					  RxFifo_Put(letter,Fifo_Depth);       // if not one of the escape codes put char in fifo
+																								 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
+																								 // these code are ignored in SW FIFO
+																								 // if need to support for some odd reason, a patch is needed
+			
 					} else{
 						Decode_ESC_SEQ(letter);
 					}
@@ -251,12 +264,12 @@ void Decode_ESC_SEQ(char letter){
 			switch(letter){
 				case 68:							
 					key=LEFT_ARROW_KEY;
-					RxFifo_Shift_L();
+					RxFifo_Shift_L(Fifo_Depth);
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 67:								
 					key=RIGHT_ARROW_KEY;
-					RxFifo_Shift_R();
+					RxFifo_Shift_R(Fifo_Depth);
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 66:							

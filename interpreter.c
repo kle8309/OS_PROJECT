@@ -1,14 +1,6 @@
 #include "interpreter.h"
-#include "pwm.h"
 #include "command.h"
-#include "debug.h"
-#include "fifo.h"
 
-#include <string.h>
-#include <stdio.h>
-#include <stdint.h>
-#include <stdlib.h>
-#include <stdbool.h>
 
 /*
 ========================================================================================================================
@@ -58,34 +50,18 @@ void INTER_HandleBuffer(void){
 
   
   // break buffer into tokens
+	// strtok expects a string as an arg on the first call
+	// point where the last token was found is kept internally 
+	// In subsequent calls, strtok expects a null pointer as an arg
   tokenPtr = strtok(INTER_CmdBuffer, delim);
   while ( tokenPtr != NULL ){
     tokens[numTokens++] = tokenPtr;  // numTokens is post-incremented after tokens[] is updated
     tokenPtr = strtok(NULL, delim);  // In subsequent calls, strtok expects a null pointer
   }
     
-//    printf("parsed tokens:\n");
-//    for (int i = 0; i < numTokens; i++){
-//        printf("%d - %s\n", i, tokens[i]); 
-//    }
-
-   i = 0;
-   bool cmdFound = false;
-   while (mainCommands[i].function != NULL){									//if function pointer is not NULL
-																															
-																															// mainCommands[] array is pre-defined in command.c
-        if (strcmp(tokens[0], mainCommands[i].key) == 0){     // check the first user token to key
-																															// example: tokens[] pointer array points to 
-																															// 0) adcCollect 1) channel 2) freq 3) nSamples
-																															// if token matches with the ith command
-																															// then execute the ith command's function using
-																														  // the token[1].  
-																															// mainCommands is a Command struct with a function pointer
-              mainCommands[i].function(tokens, numTokens); // '1' is the index which will be used by token
-					
-              cmdFound = true;								
-        }
-        i++;
+    printf("parsed tokens:\n");
+    for (int i = 0; i < numTokens; i++){
+        printf("%d - %s\n", i, tokens[i]); 
     }
-    if (!cmdFound) printf ("ERROR: No matching command found.\n");
+
 }

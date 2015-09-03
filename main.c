@@ -36,13 +36,13 @@
 
 #include "pll.h"
 #include "st7735.h"
-#include "usb_uart.h"
 #include "systick.h"
 #include "pwm.h"
 #include "adc.h"
 #include "timer0.h"
 #include "interpreter.h"
 #include "debug.h"
+#include "usb_uart.h"
 
 #define LCD_WIDTH 128
 #define LCD_HEIGHT 160
@@ -104,10 +104,11 @@ int main(void){
     */
     if (USB_BufferReady){
       USB_BufferReady = false;
-      //INTER_HandleBuffer();
 			
-			loopcount++;
-			dd++;
+      INTER_HandleBuffer();// interpreter handler
+			
+			//loopcount++;
+			//dd++;
 			// experimental test comment
     }
     
