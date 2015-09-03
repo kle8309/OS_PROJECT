@@ -22,54 +22,44 @@ compiling adc.c...
 compiling debug.c...
 compiling os.c...
 linking...
-Program Size: Code=4636 RO-data=2052 RW-data=132 ZI-data=2212  
+Program Size: Code=3572 RO-data=2052 RW-data=124 ZI-data=2148  
 ".\tivaOS.axf" - 0 Error(s), 0 Warning(s).
-</pre>
-</body>
-</html>
-ommand.c...
+Load "C:\\Users\\Kelvin\\Google Drive\\dev\\OS_PROJECT\\tivaOS.axf" 
+Connecting: Mode=JTAG, Speed=1000000Hz
+Erase Done.
+Programming Done.
+Verify OK.
+s), 0 Warning(s).
+Target not created
+.c: 1 warning, 1 error
+compiling systick.c...
+compiling pwm.c...
+compiling interpreter.c...
+interpreter.h(19): warning:  #1-D: last line of file ends without a newline
+  extern uint32_t RxFifo_Get(char*,long);
+interpreter.c: 1 warning, 0 errors
+compiling command.c...
 compiling timer0.c...
 compiling adc.c...
 compiling debug.c...
 compiling os.c...
-".\tivaOS.axf" - 1 Error(s), 0 Warning(s).
+".\tivaOS.axf" - 1 Error(s), 3 Warning(s).
 Target not created
-ated
-Symbol RxGetPt multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxPutPt multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxPutPt multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxGetPt multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxGetPt multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Get multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Get multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Init multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Init multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Pop multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Pop multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Put multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Put multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Shift_L multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Shift_L multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Shift_R multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Shift_R multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Size multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol RxFifo_Size multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Get multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Get multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Init multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Init multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Pop multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Pop multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Put multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Put multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Shift_L multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Shift_L multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Shift_R multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Shift_R multiply defined (by interpreter.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Size multiply defined (by usb_uart.o and main.o).
-.\tivaOS.axf: Error: L6200E: Symbol TxFifo_Size multiply defined (by interpreter.o and main.o).
-Not enough information to list image symbols.
-Not enough information to list the image map.
-Finished: 2 information, 0 warning and 36 error messages.
-".\tivaOS.axf" - 36 Error(s), 0 Warning(s).
+ifier
+  fdsfsd
+interpreter.c(20): error:  #65: expected a ";"
+  char INTER_CmdBuffer[BUFFER_SIZE];
+interpreter.c(48): error:  #20: identifier "INTER_CmdBuffer" is undefined
+      INTER_CmdBuffer[i] = letter;
+interpreter.c(49): error:  #20: identifier "INTER_CmdBuffer" is undefined
+    } while ( INTER_CmdBuffer[i++] != 0 && i < BUFFER_SIZE);
+interpreter.c(56): error:  #20: identifier "INTER_CmdBuffer" is undefined
+    tokenPtr = strtok(INTER_CmdBuffer, delim);
+interpreter.c: 0 warnings, 5 errors
+compiling command.c...
+compiling timer0.c...
+compiling adc.c...
+compiling debug.c...
+compiling os.c...
+".\tivaOS.axf" - 10 Error(s), 1 Warning(s).
 Target not created

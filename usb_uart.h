@@ -1,9 +1,9 @@
 #ifndef USB_UART_H
 #define USB_UART_H
 
-#define FIFO_SIZE 64
-#define SIZE_DEPTH   8         // size of the FIFOs (must be power of 2)
-#define SIZE_WIDTH   64         // size of the FIFOs (must be power of 2)
+#define FIFO_SIZE 64 					// need to sort this out for the rest of the files
+#define SIZE_DEPTH   8        // size of the FIFOs (must be power of 2)
+#define SIZE_WIDTH   64       // size of the FIFOs (must be power of 2)
 #define FIFOSUCCESS 1         // return value on success
 #define FIFOFAIL    0         // return value on failure
 

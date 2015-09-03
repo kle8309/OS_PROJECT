@@ -105,7 +105,7 @@ int main(void){
     if (USB_BufferReady){
       USB_BufferReady = false;
 			
-      INTER_HandleBuffer();// interpreter handler
+      //INTER_HandleBuffer();// interpreter handler
 			
 			//loopcount++;
 			//dd++;

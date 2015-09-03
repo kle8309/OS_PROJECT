@@ -10,6 +10,10 @@
 
 void INTER_HandleBuffer(void);
 //external dependencies
-//extern uint32_t RxFifo_Get(char*);
+//error if place it here
+//usb_uart.c(40): error:  #147-D: declaration is incompatible with "uint32_t RxFifo_Get(char *, long)"
+
+
 
 #endif
+

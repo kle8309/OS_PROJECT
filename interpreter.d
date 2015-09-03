@@ -7,5 +7,3 @@
 .\interpreter.o: C:\Keil\ARM\ARMCC\bin\..\include\stdbool.h
 .\interpreter.o: usb_uart.h
 .\interpreter.o: fifo.h
-.\interpreter.o: command.h
-.\interpreter.o: defs.h

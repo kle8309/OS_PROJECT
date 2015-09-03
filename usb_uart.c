@@ -210,7 +210,7 @@ void USB_UART_HandleRXBuffer(void){
 					// don't put \r in sw fifo
 					// \r indicates user has pressed Enter key
 					// increment Fifo_Depth
-					RxFifo_Put(0, Fifo_Depth++);                    // null terminate buffer
+					RxFifo_Put(0, Fifo_Depth++);                  // 0 null terminate buffer
 					
 					if(Fifo_Depth>SIZE_DEPTH){										// wraparound when greater than max fifo depth
 						Fifo_Depth=0; 
