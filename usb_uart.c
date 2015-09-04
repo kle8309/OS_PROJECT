@@ -265,13 +265,15 @@ void USB_UART_HandleRXBuffer(void){
 } //end RX handle
 
 // decode escape sequence function
-
+char s[64] = {'\0'};
 void Decode_ESC_SEQ(char letter){
 
-		if (letter == 27 && read_counter == 0){																											
+		if (letter == 27 && read_counter == 0){
+		
 				read_counter++;														// first match												
 																										
-		} else if (letter == 91 && read_counter == 1){ 	// move on to second code																															// if first and second code in sequence are correct
+		} else if (letter == 91 && read_counter == 1){ 	// move on to second code
+			// if first and second code in sequence are correct
 				read_counter++;	// second match
 																																																	
 		}	else if (read_counter == 2 )	{ 						// third and last code check
@@ -280,13 +282,17 @@ void Decode_ESC_SEQ(char letter){
 			read_counter=0; 
 			switch(letter){
 				case 68:
-					USB_UART_PrintChar(letter); 				 //echo to terminal						
+					USB_UART_PrintChar(27); 				 //echo to terminal
+					USB_UART_PrintChar(91); 				 //echo to terminal
+					USB_UART_PrintChar(68); 				 //echo to terminal
 					key=LEFT_ARROW_KEY;
 					RxFifo_Shift_L(Fifo_Depth);
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 67:
-					USB_UART_PrintChar(letter); 				 //echo to terminal						
+					USB_UART_PrintChar(27); 				 //echo to terminal
+					USB_UART_PrintChar(91); 				 //echo to terminal
+					USB_UART_PrintChar(67); 				 //echo to terminal
 					key=RIGHT_ARROW_KEY;
 					RxFifo_Shift_R(Fifo_Depth);
 				//TODO: add code to move fifo pointer similar to backspace code
@@ -294,21 +300,28 @@ void Decode_ESC_SEQ(char letter){
 				case 66:							
 					key=DOWN_ARROW_KEY;
 					//TODO: add code.  Need 2D SW fifo array
-				 if(last_Fifo>0){ // bug detect at 0 to 5 (required two down clicks)
-					last_Fifo--;
-				 }else{
-					last_Fifo=Fifo_Depth-1; // wrap bug if press down arrow without first entering a cmd
+				  if(last_Fifo>0){ // bug detect at 0 to 5 (required two down clicks)
+						last_Fifo--;
+				  }else{
+						last_Fifo=Fifo_Depth-1; // wrap bug if press down arrow without first entering a cmd
 																	// because Fifo_Depth needs to be at least 1
 																	// w/o entering a cmd bypasses this requirement
-				 }
-				  //puts("")
-				  char s[64] = {'\0'};
-				  printf("%s\r",s); //clear line
+				  }
+				  printf("                    \r"); //clear line
 					printf("%s\r",RxFifo[last_Fifo]); //print previous command
 					break;
 				case 65:						
 					key=UP_ARROW_KEY;
 					//TODO: add code.  Need 2D SW fifo array
+					if(last_Fifo<Fifo_Depth-1){ // bug detect at 0 to 5 (required two down clicks)
+						last_Fifo++;
+				  }else{
+						last_Fifo=0; // wrap bug if press down arrow without first entering a cmd
+																	// because Fifo_Depth needs to be at least 1
+																	// w/o entering a cmd bypasses this requirement
+				  }
+				  printf("                    \r"); //clear line
+					printf("%s\r",RxFifo[last_Fifo]); //print previous command
 					break;
 				default:	
 					key = INVALID_KEY;
