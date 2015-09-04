@@ -72,21 +72,27 @@ unsigned short NAME ## Fifo_Size (void){  \
 TYPE volatile *NAME ## PutPt;    \
 TYPE volatile *NAME ## GetPt;    \
 TYPE static NAME ## Fifo [SIZE_DEPTH][SIZE_WIDTH];        \
+TYPE static *NAME ## Fifo_Level_Min;   \
+TYPE static *NAME ## Fifo_Level_Max;   \
 void NAME ## Fifo_Init(void){ long sr;  \
   sr = StartCritical();                 \
   NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
-  EndCritical(sr);                      \
-}                                       \
-void NAME ## Fifo_reInit(uint32_t depth){ long sr;  \
-  sr = StartCritical();                 \
-	NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[depth][0]; \
+	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][0];\
+	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][SIZE_WIDTH];\
 	EndCritical(sr);                      \
 }                                       \
-int NAME ## Fifo_Put (TYPE data, uint32_t depth){       \
+void NAME ## Fifo_New_Level(uint32_t Fifo_Level){ long sr;  \
+  sr = StartCritical();                 \
+	NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[Fifo_Level][0]; \
+	NAME ## Fifo_Level_Min=&NAME ## Fifo[Fifo_Level][0];\
+	NAME ## Fifo_Level_Max=&NAME ## Fifo[Fifo_Level][SIZE_WIDTH];\
+	EndCritical(sr);                      \
+}                                       \
+int NAME ## Fifo_Put (TYPE data){       \
   TYPE volatile *nextPutPt;             \
   nextPutPt = NAME ## PutPt + 1;        \
-  if(nextPutPt == &NAME ## Fifo[depth][SIZE_WIDTH]){ \
-    nextPutPt = &NAME ## Fifo[depth][0];       \
+  if(nextPutPt == NAME ## Fifo_Level_Max){ \
+    nextPutPt = NAME ## Fifo_Level_Min;       \
   }                                     \
   if(nextPutPt == NAME ## GetPt ){      \
     return(FAIL);                       \
@@ -97,50 +103,50 @@ int NAME ## Fifo_Put (TYPE data, uint32_t depth){       \
     return(SUCCESS);                    \
   }                                     \
 }                                       \
-int NAME ## Fifo_Pop (uint32_t depth) {           \
+int NAME ## Fifo_Pop (void) {           \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
 	*( NAME ## PutPt ) = NULL;				    \
   nextPutPt = NAME ## PutPt - 1;        \
-  if(nextPutPt < &NAME ## Fifo[depth][0]){     \
-    nextPutPt = &NAME ## Fifo[depth][SIZE_WIDTH];    \
+  if(nextPutPt < NAME ## Fifo_Level_Min){     \
+    nextPutPt = NAME ## Fifo_Level_Max;    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Shift_L (uint32_t depth) {       \
+int NAME ## Fifo_Shift_L (void) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
   nextPutPt = NAME ## PutPt - 1;        \
-  if(nextPutPt < &NAME ## Fifo[depth][0]){     \
-    nextPutPt = &NAME ## Fifo[depth][SIZE_WIDTH];    \
+  if(nextPutPt < NAME ## Fifo_Level_Min){     \
+    nextPutPt = NAME ## Fifo_Level_Max;    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Shift_R (uint32_t depth) {       \
+int NAME ## Fifo_Shift_R (void) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
     return(FAIL);                       \
   }                                     \
   nextPutPt = NAME ## PutPt + 1;        \
-  if(nextPutPt > &NAME ## Fifo[depth][SIZE_WIDTH]){     \
-    nextPutPt = &NAME ## Fifo[depth][0];    \
+  if(nextPutPt > NAME ## Fifo_Level_Max){     \
+    nextPutPt = NAME ## Fifo_Level_Min;    \
   }                                     \
   NAME ## PutPt = nextPutPt;            \
   return(SUCCESS);                      \
 }                                       \
-int NAME ## Fifo_Get (TYPE *datapt, uint32_t depth){    \
+int NAME ## Fifo_Get (TYPE *datapt){    \
   if( NAME ## PutPt == NAME ## GetPt ){ \
     return(FAIL);                       \
   }                                     \
   *datapt = *( NAME ## GetPt ## ++);    \
-  if( NAME ## GetPt == &NAME ## Fifo[depth][SIZE_WIDTH]){ \
-    NAME ## GetPt = &NAME ## Fifo[depth][0];   \
+  if( NAME ## GetPt == NAME ## Fifo_Level_Max){ \
+    NAME ## GetPt = NAME ## Fifo_Level_Min;   \
   }                                     \
   return(SUCCESS);                      \
 }                                       \

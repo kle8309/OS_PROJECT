@@ -1,6 +1,6 @@
 #include "interpreter.h"
 //#include "command2.h"
-extern uint32_t RxFifo_Get(char*,uint32_t);
+extern uint32_t RxFifo_Get(char*);
 
 /*
 ========================================================================================================================
@@ -44,7 +44,7 @@ void INTER_HandleBuffer(void){
   // retrieve buffer from fifo into INTER_CmdBuffer
   do {
     char letter;
-    RxFifo_Get(&letter,Fifo_Depth);
+    RxFifo_Get(&letter);
     INTER_CmdBuffer[i] = letter;
   } while ( INTER_CmdBuffer[i++] != 0 && i < BUFFER_SIZE);
 
