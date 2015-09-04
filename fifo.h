@@ -78,7 +78,7 @@ void NAME ## Fifo_Init(void){ long sr;  \
   sr = StartCritical();                 \
   NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
 	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][0];\
-	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][SIZE_WIDTH];\
+	NAME ## Fifo_Level_Max=&NAME ## Fifo[0][SIZE_WIDTH];\
 	EndCritical(sr);                      \
 }                                       \
 void NAME ## Fifo_New_Level(uint32_t Fifo_Level){ long sr;  \

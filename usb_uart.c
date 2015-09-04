@@ -324,7 +324,7 @@ void Decode_ESC_SEQ(char letter){
 																	// because Fifo_Depth needs to be at least 1
 																	// w/o entering a cmd bypasses this requirement
 				  }
-				  printf("                    \r"); //clear line
+				  printf("                          \r"); //clear line
 					printf("%s\r",RxFifo[Next_Fifo_Level]); //print previous command
 					break;
 				default:	
