@@ -221,26 +221,36 @@ void USB_UART_HandleRXBuffer(void){
 					// don't put \r in sw fifo
 					// \r indicates user has pressed Enter key
 
+					/*
 					//copy temporary fifo to free fifo level
 					if(key==DOWN_ARROW_KEY || key==UP_ARROW_KEY){
-						 key=INVALID_KEY; // reset key to default state
-						
-						// bug predicted if down key and then some more editing
-						// will need new termination 0
-						// another bug is the termination 0 will take a spot when shifting cursor
-						// from the history search
-						
+							key=INVALID_KEY; // reset key to default state
+						// if we edit over the the termination then we will need new termination
+						// else the old termination is still valid		
 					}	else{
-						 //RxFifo_Put(0);                  // 0 null terminate buffer
-
+						 // new cmd always need termination
+						 WorkFifo_Put(0);                  // 0 null terminate buffer
 					}
-					// working/temporary fifo 0 null terminate 
-					WorkFifo_Put(0);
-					// TODO: save workingFifo pointers to RxFifo_Ptr
-					RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt;
+					*/					
+			
+					// new cmd detected when working put ptr is beyond previously saved put ptr
+					// Next_Fifo_Level index can range from the first index up to the Current_Fifo_Level
+					// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data					
+					if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
+							WorkFifo_Put(0);          												  // 0 null terminate buffer
+							RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt; // save new put pointer
+					}else{
+							// when working put is <= rx put
+						  // keep rx put ptr where it is so when we load it
+							// the put ptr will be at the end
+					}
+					
+					
+					// save workingFifo GET pointer to RxFifo_Ptr
 					RxFifo_Ptr [Current_Fifo_Level][GET_PTR]=WorkGetPt;
 								
-					// save WorkFifo to RxFifo (this has the cmd)
+					// save WorkFifo buffer to RxFifo buffer (this has the cmd)
+					// rewrite this as a save function for readability
 					memcpy ( RxFifo[Current_Fifo_Level],WorkFifo, SIZE_WIDTH );
 					
 					// move get and put pointers to next fifo level
@@ -253,7 +263,10 @@ void USB_UART_HandleRXBuffer(void){
 						Current_Fifo_Level=0; 
 						Next_Fifo_Level=SIZE_DEPTH;
 					}	else if(Current_Fifo_Level>0){
-						Next_Fifo_Level=Current_Fifo_Level;
+						Next_Fifo_Level=Current_Fifo_Level; // reset next index to current fifo index
+																								// this takes care of the history lookup issue
+																								// when the Next_Fifo_Level index is not modified by
+																								// history lookup function on the previous call
 					} else{
 						//last_Fifo=0;
 					}
@@ -327,7 +340,7 @@ void Decode_ESC_SEQ(char letter){
 					USB_UART_PrintChar(91); 				 //echo to terminal
 					USB_UART_PrintChar(68); 				 //echo to terminal
 					key=LEFT_ARROW_KEY;
-					RxFifo_Shift_L();
+					WorkFifo_Shift_L();
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 67:
@@ -335,16 +348,17 @@ void Decode_ESC_SEQ(char letter){
 					USB_UART_PrintChar(91); 				 //echo to terminal
 					USB_UART_PrintChar(67); 				 //echo to terminal
 					key=RIGHT_ARROW_KEY;
-					RxFifo_Shift_R();
+					WorkFifo_Shift_R();
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 66:							
 					key=DOWN_ARROW_KEY;
 					//TODO: add code.  Need 2D SW fifo array
-				  if(Next_Fifo_Level>0){ // bug detect at 0 to 5 (required two down clicks)
+				  if(Next_Fifo_Level>0){ 
 						Next_Fifo_Level--;
 				  }else{
-						Next_Fifo_Level=Current_Fifo_Level-1; // wrap bug if press down arrow without first entering a cmd
+						Next_Fifo_Level=Current_Fifo_Level-1; //wrap around  
+																	// wrap bug if press down arrow without first entering a cmd
 																	// because Fifo_Depth needs to be at least 1
 																	// w/o entering a cmd bypasses this requirement-->hardfault
 				  }
@@ -355,7 +369,7 @@ void Decode_ESC_SEQ(char letter){
 
 					// TODO: load workingFifo pointers according to RxFifo pointers *RELATIVE* positions
 					
-					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]);
+					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]-1);
 					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
@@ -364,6 +378,9 @@ void Decode_ESC_SEQ(char letter){
 																							//extra \r to cover the case where cursor is not at 0
 					// copy cmd to temporary fifo
 					printf("%s",WorkFifo[0]); //print previous command
+					// if we don't decrement the put ptr we need to print out the termination so
+					// that it will match the terminal cursor position
+					//printf("%s ",WorkFifo[0]); //print previous command
 					break;
 				case 65:						
 					key=UP_ARROW_KEY;
@@ -378,11 +395,15 @@ void Decode_ESC_SEQ(char letter){
 					
 					// copy current cmd selection to temporary fifo
 				  memcpy ( WorkFifo, RxFifo[Next_Fifo_Level], SIZE_WIDTH );
-					// TODO: update workingFifo pointers according to RxFifo pointers relative positions
-					WorkPutPt = RxFifo_Ptr [Current_Fifo_Level][PUT_PTR];
-					WorkGetPt = RxFifo_Ptr [Current_Fifo_Level][GET_PTR];
 					
-				  printf("                          \r"); //clear line
+					// TODO: load workingFifo pointers according to RxFifo pointers *RELATIVE* positions
+					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]-1); // the "-1" is to put cursor on the termination 0
+					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
+					WorkPutPt = &WorkFifo[0][0]+put_offset;
+					WorkGetPt = &WorkFifo[0][0]+get_offset;
+					
+				  printf("\r                          \r"); //clear line
+																									//extra \r to cover the case where cursor is not at 0
 					printf("%s",RxFifo[Next_Fifo_Level]); //print previous command
 					break;
 				default:	
