@@ -38,8 +38,8 @@ bool USB_BufferReady = false;
 */
 
 // create index implementation FIFO (see FIFO.h)
-AddPointerFifo(Rx, SIZE_DEPTH,SIZE_WIDTH, char, FIFOSUCCESS, FIFOFAIL)
-AddPointerFifo(Tx, SIZE_DEPTH,SIZE_WIDTH, char, FIFOSUCCESS, FIFOFAIL)
+AddPointerFifo(Rx, SIZE_DEPTH,SIZE_WIDTH, VAR_TYPE, FIFOSUCCESS, FIFOFAIL)
+AddPointerFifo(Tx, SIZE_DEPTH,SIZE_WIDTH, VAR_TYPE, FIFOSUCCESS, FIFOFAIL)
 
 /*
 ===================================================================================================
@@ -197,6 +197,8 @@ static uint8_t read_counter=0; 					//fifo read count
 uint32_t Current_Fifo_Level = 0;
 uint32_t Next_Fifo_Level = 0;
 
+char static Temporary_Fifo[SIZE_WIDTH];  
+
 void USB_UART_HandleRXBuffer(void){
 		char letter;
 		
@@ -206,16 +208,24 @@ void USB_UART_HandleRXBuffer(void){
 				letter = UART0_DR_R; 														// copy from RX HW fifo to memory
 				//USB_UART_PrintChar(letter);                     // echo typed character back to user terminal
 				
-				// cmd Entered
+				// cmd Entered************************************************
+			//**************************************************************
 				if (letter =='\r') {   
 					
 					USB_UART_PrintChar(letter); 				 //echo to terminal
 					USB_UART_PrintChar('\n'); 				   //echo to terminal	unless set to implicit form feed \n for \r					
 					// don't put \r in sw fifo
 					// \r indicates user has pressed Enter key
-					// increment Fifo_Depth
-					RxFifo_Put(0);                  // 0 null terminate buffer
+
+					//copy temporary fifo to free fifo level
+					if(key==DOWN_ARROW_KEY || key==UP_ARROW_KEY){
+						 memcpy ( RxFifo[Current_Fifo_Level],Temporary_Fifo, SIZE_WIDTH );
+						 key=INVALID_KEY; // reset key to default state
+					}	else{
+						 RxFifo_Put(0);                  // 0 null terminate buffer
+					}
 					// move get and put pointers to next fifo level
+					// Current_Fifo_Level is index of the fifo level that is free
 					RxFifo_New_Level(++Current_Fifo_Level);
 					
 				  //Fifo_Depth will be at least 1 at this point
@@ -246,7 +256,10 @@ void USB_UART_HandleRXBuffer(void){
 					//if first letter is not the starter code we can skip the rest
 					// on non-zero read_counter letter is allowed to have number other than 27
 					if(letter != 27 && read_counter == 0){
-						USB_UART_PrintChar(letter); 				 //echo to terminal	
+						USB_UART_PrintChar(letter); 				 //echo to terminal
+						// TODO:
+					// change put function to put to temporary fifo
+					// only when return key is pressed when we actually add to permanent fifo	
 					  RxFifo_Put(letter);       // if not one of the escape codes put char in fifo
 																								 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
 																								 // these code are ignored in SW FIFO
@@ -305,14 +318,18 @@ void Decode_ESC_SEQ(char letter){
 				  }else{
 						Next_Fifo_Level=Current_Fifo_Level-1; // wrap bug if press down arrow without first entering a cmd
 																	// because Fifo_Depth needs to be at least 1
-																	// w/o entering a cmd bypasses this requirement
+																	// w/o entering a cmd bypasses this requirement-->hardfault
 				  }
-				  
-
+					
+					// void * memcpy ( void * destination, const void * source, size_t num );
+					// copy current cmd selection to temporary fifo
+				  memcpy ( Temporary_Fifo, RxFifo[Next_Fifo_Level], SIZE_WIDTH );
+			
+					
 					printf("\r                    \r"); //clear line
 																							//extra \r to cover the case where cursor is not at 0
-					
-					printf("%s\r",RxFifo[Next_Fifo_Level]); //print previous command
+					// copy cmd to temporary fifo
+					printf("%s\r",Temporary_Fifo); //print previous command
 					break;
 				case 65:						
 					key=UP_ARROW_KEY;
@@ -324,6 +341,9 @@ void Decode_ESC_SEQ(char letter){
 																	// because Fifo_Depth needs to be at least 1
 																	// w/o entering a cmd bypasses this requirement
 				  }
+					
+					// copy current cmd selection to temporary fifo
+				  memcpy ( Temporary_Fifo, RxFifo[Next_Fifo_Level], SIZE_WIDTH );
 				  printf("                          \r"); //clear line
 					printf("%s\r",RxFifo[Next_Fifo_Level]); //print previous command
 					break;

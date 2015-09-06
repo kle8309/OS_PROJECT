@@ -6,6 +6,7 @@
 #define SIZE_WIDTH   64       // size of the FIFOs (must be power of 2)
 #define FIFOSUCCESS 1         // return value on success
 #define FIFOFAIL    0         // return value on failure
+#define VAR_TYPE char
 
 #include "stdint.h"
 #include "stdbool.h"
