@@ -28,6 +28,8 @@
 #ifndef __FIFO_H__
 #define __FIFO_H__
 
+#include <string.h>
+
 long StartCritical (void);    // previous I bit, disable interrupts
 void EndCritical(long sr);    // restore I bit to previous value
 
@@ -67,27 +69,35 @@ unsigned short NAME ## Fifo_Size (void){  \
 // SIZE must be a power of two
 // creates TxFifo_Init() TxFifo_Get() and TxFifo_Put()
 
+#define NUM_PTR 2							// get and put ptrs
+
 // macro to create a pointer FIFO--------------------------------
 #define AddPointerFifo(NAME,SIZE_DEPTH,SIZE_WIDTH,TYPE,SUCCESS,FAIL) \
 TYPE volatile *NAME ## PutPt;    \
 TYPE volatile *NAME ## GetPt;    \
+TYPE volatile *NAME ## Fifo_Ptr [SIZE_DEPTH][NUM_PTR];        \
 TYPE static NAME ## Fifo [SIZE_DEPTH][SIZE_WIDTH];        \
 TYPE static *NAME ## Fifo_Level_Min;   \
 TYPE static *NAME ## Fifo_Level_Max;   \
 void NAME ## Fifo_Init(void){ long sr;  \
   sr = StartCritical();                 \
   NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
-	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][0];\
-	NAME ## Fifo_Level_Max=&NAME ## Fifo[0][SIZE_WIDTH];\
+	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][0]; \
+	NAME ## Fifo_Level_Max=&NAME ## Fifo[0][SIZE_WIDTH]; \
 	EndCritical(sr);                      \
 }                                       \
 void NAME ## Fifo_New_Level(uint32_t Fifo_Level){ long sr;  \
   sr = StartCritical();                 \
 	NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[Fifo_Level][0]; \
 	NAME ## Fifo_Level_Min=&NAME ## Fifo[Fifo_Level][0];\
-	NAME ## Fifo_Level_Max=&NAME ## Fifo[Fifo_Level][SIZE_WIDTH];\
+	NAME ## Fifo_Level_Max=&NAME ## Fifo[Fifo_Level][SIZE_WIDTH];	\
 	EndCritical(sr);                      \
 }                                       \
+void NAME ## Fifo_Pointer_RST(void){ long sr;  \
+  sr = StartCritical();                 \
+  NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
+	EndCritical(sr);                      \
+}  \
 int NAME ## Fifo_Put (TYPE data){       \
   TYPE volatile *nextPutPt;             \
   nextPutPt = NAME ## PutPt + 1;        \
