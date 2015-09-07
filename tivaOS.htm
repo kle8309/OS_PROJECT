@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\tivaOS.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\tivaOS.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Sun Sep 06 23:52:17 2015
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5.03 [Build 76]: Last Updated: Mon Sep 07 15:26:27 2015
 <BR><P>
 <H3>Maximum Stack Usage =         88 bytes + Unknown(Functions without stacksize, Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -683,12 +683,12 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[89]"></a>Decode_ESC_SEQ</STRONG> (Thumb, 468 bytes, Stack size 8 bytes, usb_uart.o(i.Decode_ESC_SEQ))
+<P><STRONG><a name="[89]"></a>Decode_ESC_SEQ</STRONG> (Thumb, 476 bytes, Stack size 8 bytes, usb_uart.o(i.Decode_ESC_SEQ))
 <BR><BR>[Stack]<UL><LI>Max Depth = 32<LI>Call Chain = Decode_ESC_SEQ &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[8c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WorkFifo_Shift_R
-<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WorkFifo_Shift_L
-<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
+<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WorkFifo_Shift_L
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
@@ -812,7 +812,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[a0]"></a>USB_UART_HandleRXBuffer</STRONG> (Thumb, 286 bytes, Stack size 8 bytes, usb_uart.o(i.USB_UART_HandleRXBuffer))
+<P><STRONG><a name="[a0]"></a>USB_UART_HandleRXBuffer</STRONG> (Thumb, 324 bytes, Stack size 8 bytes, usb_uart.o(i.USB_UART_HandleRXBuffer))
 <BR><BR>[Stack]<UL><LI>Max Depth = 40 + Unknown Stack Size
 <LI>Call Chain = USB_UART_HandleRXBuffer &rArr; Decode_ESC_SEQ &rArr; __2printf
 </UL>
@@ -821,27 +821,31 @@ Global Symbols
 <LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WorkFifo_Pointer_RST
 <LI><a href="#[97]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RxFifo_New_Level
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Decode_ESC_SEQ
-<LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 <LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memclr4
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__aeabi_memcpy
 </UL>
 <BR>[Called By]<UL><LI><a href="#[f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;UART0_Handler
 </UL>
 
-<P><STRONG><a name="[a5]"></a>USB_UART_Init</STRONG> (Thumb, 214 bytes, Stack size 8 bytes, usb_uart.o(i.USB_UART_Init))
-<BR><BR>[Stack]<UL><LI>Max Depth = 16 + Unknown Stack Size
-<LI>Call Chain = USB_UART_Init &rArr; WorkFifo_Init
+<P><STRONG><a name="[a5]"></a>USB_UART_Init</STRONG> (Thumb, 232 bytes, Stack size 8 bytes, usb_uart.o(i.USB_UART_Init))
+<BR><BR>[Stack]<UL><LI>Max Depth = 32 + Unknown Stack Size
+<LI>Call Chain = USB_UART_Init &rArr; __2printf
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;WorkFifo_Init
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TxFifo_Init
 <LI><a href="#[94]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RxFifo_Init
+<LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
+<LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;__2printf
 </UL>
 <BR>[Called By]<UL><LI><a href="#[7c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[8a]"></a>USB_UART_PrintChar</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, usb_uart.o(i.USB_UART_PrintChar))
+<P><STRONG><a name="[8b]"></a>USB_UART_PrintChar</STRONG> (Thumb, 18 bytes, Stack size 0 bytes, usb_uart.o(i.USB_UART_PrintChar))
 <BR><BR>[Called By]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_HandleRXBuffer
 <LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Decode_ESC_SEQ
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_Init
 <LI><a href="#[7d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;fputc
 </UL>
 
@@ -873,7 +877,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_HandleRXBuffer
 </UL>
 
-<P><STRONG><a name="[8b]"></a>WorkFifo_Shift_L</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, usb_uart.o(i.WorkFifo_Shift_L))
+<P><STRONG><a name="[8a]"></a>WorkFifo_Shift_L</STRONG> (Thumb, 42 bytes, Stack size 0 bytes, usb_uart.o(i.WorkFifo_Shift_L))
 <BR><BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Decode_ESC_SEQ
 </UL>
 
@@ -890,7 +894,9 @@ Global Symbols
 <P><STRONG><a name="[8e]"></a>__2printf</STRONG> (Thumb, 0 bytes, Stack size 24 bytes, printf4.o(i.__0printf$4))
 <BR><BR>[Stack]<UL><LI>Max Depth = 24<LI>Call Chain = __2printf
 </UL>
-<BR>[Called By]<UL><LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Decode_ESC_SEQ
+<BR>[Called By]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_HandleRXBuffer
+<LI><a href="#[89]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;Decode_ESC_SEQ
+<LI><a href="#[a5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_Init
 </UL>
 
 <P><STRONG><a name="[bf]"></a>__scatterload_copy</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_copy), UNUSED)
@@ -902,7 +908,7 @@ Global Symbols
 <P><STRONG><a name="[7d]"></a>fputc</STRONG> (Thumb, 16 bytes, Stack size 16 bytes, main.o(i.fputc))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = fputc
 </UL>
-<BR>[Calls]<UL><LI><a href="#[8a]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
+<BR>[Calls]<UL><LI><a href="#[8b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;USB_UART_PrintChar
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> printf4.o(i.__0printf$4)
 </UL>

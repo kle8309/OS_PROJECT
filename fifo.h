@@ -129,7 +129,7 @@ int NAME ## Fifo_Pop (void) {           \
 int NAME ## Fifo_Shift_L (void) {       \
   TYPE volatile *nextPutPt;             \
   if(NAME## PutPt == NAME ## GetPt ){   \
-    return(FAIL);                       \
+		return(FAIL);                       \
   }                                     \
   nextPutPt = NAME ## PutPt - 1;        \
   if(nextPutPt < NAME ## Fifo_Level_Min){     \
