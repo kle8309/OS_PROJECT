@@ -2,7 +2,7 @@
 #define USB_UART_H
 
 #define FIFO_SIZE 64 					// need to sort this out for the rest of the files
-#define SIZE_DEPTH   8        // size of the FIFOs 
+#define SIZE_DEPTH   16        // size of the FIFOs 
 #define SIZE_WIDTH   64       // size of the FIFOs 
 #define GET_PTR 0  // index of get pointer within fifo buffer 
 #define PUT_PTR 1  // index of put pointer within fifo buffer 

@@ -243,6 +243,7 @@ void USB_UART_HandleRXBuffer(void){
 							// when working put is <= rx put
 						  // keep rx put ptr where it is so when we load it
 							// the put ptr will be at the end
+						  RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=RxFifo_Ptr [Next_Fifo_Level][PUT_PTR];
 					}
 					
 					
@@ -319,6 +320,7 @@ void USB_UART_HandleRXBuffer(void){
 // decode escape sequence function
 uint32_t volatile get_offset;
 uint32_t volatile put_offset;
+uint32_t volatile cursor_pos;
 
 void Decode_ESC_SEQ(char letter){
 
@@ -340,7 +342,9 @@ void Decode_ESC_SEQ(char letter){
 					USB_UART_PrintChar(91); 				 //echo to terminal
 					USB_UART_PrintChar(68); 				 //echo to terminal
 					key=LEFT_ARROW_KEY;
+					cursor_pos= WorkPutPt-&WorkFifo[0][0];
 					WorkFifo_Shift_L();
+				  cursor_pos= WorkPutPt-&WorkFifo[0][0];
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 67:
