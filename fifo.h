@@ -98,6 +98,11 @@ void NAME ## Fifo_Pointer_RST(void){ long sr;  \
   NAME ## PutPt = NAME ## GetPt = &NAME ## Fifo[0][0]; \
 	EndCritical(sr);                      \
 }  \
+void NAME ## Fifo_Clear(void){ long sr;  \
+  sr = StartCritical();                 \
+	memset ( NAME ## Fifo, 0, SIZE_WIDTH*SIZE_DEPTH); \
+	EndCritical(sr);                      \
+}  																			\
 int NAME ## Fifo_Put (TYPE data){       \
   TYPE volatile *nextPutPt;             \
   nextPutPt = NAME ## PutPt + 1;        \

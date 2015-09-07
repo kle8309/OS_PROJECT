@@ -221,7 +221,8 @@ void USB_UART_HandleRXBuffer(void){
 				if (letter =='\r') {   
 					
 						USB_UART_PrintChar(letter); 				 //echo to terminal
-						USB_UART_PrintChar('\n'); 				   //echo to terminal	unless set to implicit form feed \n for \r					
+						USB_UART_PrintChar('\n'); 				   //echo to terminal	unless set to implicit form feed \n for \r		
+					
 						// don't put \r in sw fifo
 						// \r indicates user has pressed Enter key
 
@@ -236,63 +237,67 @@ void USB_UART_HandleRXBuffer(void){
 							 WorkFifo_Put(0);                  // 0 null terminate buffer
 						}
 						*/					
-				
-						// new cmd detected when working put ptr is beyond previously saved put ptr
-						// Next_Fifo_Level index can range from the first index up to the Current_Fifo_Level
-						// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data					
-						if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
-								WorkFifo_Put(0);          												  // 0 null terminate buffer
-								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt; // save new put pointer
-						}else{
-								// when working put is <= rx put
-								// keep rx put ptr where it is so when we load it
-								// the put ptr will be at the end
-								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=RxFifo_Ptr [Next_Fifo_Level][PUT_PTR];
-						}
-						
-						
-						// save workingFifo GET pointer to RxFifo_Ptr
-						RxFifo_Ptr [Current_Fifo_Level][GET_PTR]=WorkGetPt;
-									
-						// save WorkFifo buffer to RxFifo buffer (this has the cmd)
-						// rewrite this as a save function for readability
-						memcpy ( RxFifo[Current_Fifo_Level],WorkFifo, SIZE_WIDTH );
-						printf("Saved: %s\n\r",RxFifo[Current_Fifo_Level]);
-						// move get and put pointers to next fifo level
-						// Current_Fifo_Level is index of the fifo level that is free
-						RxFifo_New_Level(++Current_Fifo_Level);
-						
-						//Fifo_Depth will be at least 1 at this point
-						//b/c the increment
-						if(Current_Fifo_Level==SIZE_DEPTH){										// wraparound when greater than max fifo depth
-							Current_Fifo_Level=0; 
-							Next_Fifo_Level=SIZE_DEPTH;
-						}	else if(Current_Fifo_Level>0){
-							Next_Fifo_Level=Current_Fifo_Level; // reset next index to current fifo index
-																									// this takes care of the history lookup issue
-																									// when the Next_Fifo_Level index is not modified by
-																									// history lookup function on the previous call
-						} else{
-							//last_Fifo=0;
-						}
+						if(WorkFifo[0][0]!='\0'){
+								// new cmd detected when working put ptr is beyond previously saved put ptr
+								// Next_Fifo_Level index can range from the first index up to the Current_Fifo_Level
+								// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data					
+								if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
+										WorkFifo_Put(0);          												  // 0 null terminate buffer
+										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt; // save new put pointer
+								}else{
+										// when working put is <= rx put
+										// keep rx put ptr where it is so when we load it
+										// the put ptr will be at the end
+										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=RxFifo_Ptr [Next_Fifo_Level][PUT_PTR];
+								}
+								
+								
+								// save workingFifo GET pointer to RxFifo_Ptr
+								RxFifo_Ptr [Current_Fifo_Level][GET_PTR]=WorkGetPt;
+											
+								// save WorkFifo buffer to RxFifo buffer (this has the cmd)
+								// rewrite this as a save function for readability
+								memcpy ( RxFifo[Current_Fifo_Level],WorkFifo, SIZE_WIDTH );
+								printf("Saved %d/%d: '%s'\n\r",Current_Fifo_Level+1,SIZE_DEPTH,RxFifo[Current_Fifo_Level]);
+								// move get and put pointers to next fifo level
+								// Current_Fifo_Level is index of the fifo level that is free
+								RxFifo_New_Level(++Current_Fifo_Level);
+								
+								//Fifo_Depth will be at least 1 at this point
+								//b/c the increment
+								if(Current_Fifo_Level==SIZE_DEPTH){										// wraparound when greater than max fifo depth
+									Current_Fifo_Level=0; 
+									Next_Fifo_Level=SIZE_DEPTH;
+								}	else if(Current_Fifo_Level>0){
+									Next_Fifo_Level=Current_Fifo_Level; // reset next index to current fifo index
+																											// this takes care of the history lookup issue
+																											// when the Next_Fifo_Level index is not modified by
+																											// history lookup function on the previous call
+								} else{
+									//last_Fifo=0;
+								}
+						}//end if empty string
 						
 						// TODO: reset workingFifo pointers to 0 position 
 						WorkFifo_Pointer_RST();
 						// wipe Fifo clean
 						//void * memset ( void * ptr, int value, size_t num );
-						memset ( WorkFifo[0], 0, SIZE_WIDTH);
-						
-						USB_BufferReady = true;                       // toggle buffer processing semaphore
-						
-						// ready for next cmd						
-						printf("@user >> ");	
+						//memset ( WorkFifo[0], 0, SIZE_WIDTH);
+						WorkFifo_Clear();
+						key=INVALID_KEY; // reset key to default state
+					                 // toggle buffer processing semaphore
+						printf("@user >> ");		// ready for next cmd			
+						USB_BufferReady = true;      
 					
 				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
 						USB_UART_PrintChar(letter); 				 //echo to terminal	
 						// reset workingFifo pointers to 0 position 
 						WorkFifo_Pointer_RST();					
 						// wipe Fifo clean
-						memset ( WorkFifo[0], 0, SIZE_WIDTH);
+						//memset ( WorkFifo[0], 0, SIZE_WIDTH);
+					  WorkFifo_Clear();
+						key=INVALID_KEY; // reset key to default state
+						printf("@user >> ");		// ready for next cmd			
 
 				} else if (letter == 127) {              // handle backspace
 						USB_UART_PrintChar(letter); 				 //echo to terminal	
@@ -318,6 +323,7 @@ void USB_UART_HandleRXBuffer(void){
 							RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]=WorkPutPt;
 				
 						} else{
+							
 							Decode_ESC_SEQ(letter);
 						}
 						// END ESCAPE SEQUENCE CODE					
@@ -326,7 +332,7 @@ void USB_UART_HandleRXBuffer(void){
 				
 				
 		} //end HW FIFO read while
-		
+				
 } //end RX handle
 
 // decode escape sequence function
@@ -401,7 +407,7 @@ void Decode_ESC_SEQ(char letter){
 					printf("\r                    \r"); //clear line
 																							//extra \r to cover the case where cursor is not at 0
 					// copy cmd to temporary fifo
-					printf("%s",WorkFifo[0]); //print previous command
+					printf("@user >> %s",WorkFifo[0]); //print previous command
 					// if we don't decrement the put ptr we need to print out the termination so
 					// that it will match the terminal cursor position
 					//printf("%s ",WorkFifo[0]); //print previous command
@@ -428,7 +434,7 @@ void Decode_ESC_SEQ(char letter){
 					
 				  printf("\r                          \r"); //clear line
 																									//extra \r to cover the case where cursor is not at 0
-					printf("%s",RxFifo[Next_Fifo_Level]); //print previous command
+					printf("@user >> %s",RxFifo[Next_Fifo_Level]); //print previous command
 					break;
 				default:	
 					key = INVALID_KEY;
