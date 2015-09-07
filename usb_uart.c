@@ -282,7 +282,11 @@ void USB_UART_HandleRXBuffer(void){
 					USB_BufferReady = true;                       // toggle buffer processing semaphore
 					
 				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
-						USB_UART_PrintChar(letter); 				 //echo to terminal	
+					USB_UART_PrintChar(letter); 				 //echo to terminal	
+					// reset workingFifo pointers to 0 position 
+					WorkFifo_Pointer_RST();					
+					// wipe Fifo clean
+					memset ( WorkFifo[0], 0, SIZE_WIDTH);
 					 // do nothing
 				} else if (letter == 127) {              // handle backspace
 						USB_UART_PrintChar(letter); 				 //echo to terminal	
