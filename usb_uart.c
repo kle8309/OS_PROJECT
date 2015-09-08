@@ -243,7 +243,8 @@ void USB_UART_HandleRXBuffer(void){
 								// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data					
 								if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
 										WorkFifo_Put(0);          												  // 0 null terminate buffer
-										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt; // save new put pointer
+									  //"string\0"_ after put the put ptr is the the right of null terminator so we subtract 1
+										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt-1; // save new put pointer
 								}else{
 										// when working put is <= rx put
 										// keep rx put ptr where it is so when we load it
@@ -253,6 +254,8 @@ void USB_UART_HandleRXBuffer(void){
 								
 								
 								// save workingFifo GET pointer to RxFifo_Ptr
+								// TODO: need to update the get ptr to pt towards the fifo array 
+								// one cmd per array
 								RxFifo_Ptr [Current_Fifo_Level][GET_PTR]=WorkGetPt;
 											
 								// save WorkFifo buffer to RxFifo buffer (this has the cmd)
@@ -300,8 +303,10 @@ void USB_UART_HandleRXBuffer(void){
 						printf("@user >> ");		// ready for next cmd			
 
 				} else if (letter == 127) {              // handle backspace
-						USB_UART_PrintChar(letter); 				 //echo to terminal	
-						WorkFifo_Pop();      // remove a char from the end of the fifo
+						if(WorkPutPt>WorkFifo_Level_Min){
+							USB_UART_PrintChar(letter); 				 //echo to terminal	
+							WorkFifo_Pop();      // remove a char from the end of the fifo
+						}
 				}	else {
 					// START ESCAPE SEQUENCE CODE
 					// 27 91 'D' or 'C' or 'B' or 'A'
@@ -399,13 +404,15 @@ void Decode_ESC_SEQ(char letter){
 
 					// TODO: load workingFifo pointers according to RxFifo pointers *RELATIVE* positions
 					
-					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]-1);
+					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]);
 					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
 					
-					printf("\r                    \r"); //clear line
-																							//extra \r to cover the case where cursor is not at 0
+					//reference: http://www.termsys.demon.co.uk/vtansi.htm
+					//<ESC>[2K Erases the entire current line.
+					printf("%c[2K\r",0x1B);//extra \r to cover the case where cursor is not at 0
+																						
 					// copy cmd to temporary fifo
 					printf("@user >> %s",WorkFifo[0]); //print previous command
 					// if we don't decrement the put ptr we need to print out the termination so
@@ -427,13 +434,14 @@ void Decode_ESC_SEQ(char letter){
 				  memcpy ( WorkFifo, RxFifo[Next_Fifo_Level], SIZE_WIDTH );
 					
 					// TODO: load workingFifo pointers according to RxFifo pointers *RELATIVE* positions
-					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]-1); // the "-1" is to put cursor on the termination 0
+					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]); 
 					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
 					
-				  printf("\r                          \r"); //clear line
-																									//extra \r to cover the case where cursor is not at 0
+					//<ESC>[2K Erases the entire current line.
+					printf("%c[2K\r",0x1B);//extra \r to cover the case where cursor is not at 0
+																									
 					printf("@user >> %s",RxFifo[Next_Fifo_Level]); //print previous command
 					break;
 				default:	

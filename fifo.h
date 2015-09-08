@@ -119,41 +119,24 @@ int NAME ## Fifo_Put (TYPE data){       \
   }                                     \
 }                                       \
 int NAME ## Fifo_Pop (void) {           \
-  TYPE volatile *nextPutPt;             \
-  if(NAME## PutPt == NAME ## GetPt ){   \
+  if(NAME## PutPt <= NAME ## Fifo_Level_Min ){   \
     return(FAIL);                       \
   }                                     \
-	*( NAME ## PutPt ) = NULL;				    \
-  nextPutPt = NAME ## PutPt - 1;        \
-  if(nextPutPt < NAME ## Fifo_Level_Min){     \
-    nextPutPt = NAME ## Fifo_Level_Max;    \
-  }                                     \
-  NAME ## PutPt = nextPutPt;            \
+	*(--NAME ## PutPt) = 32;             \
   return(SUCCESS);                      \
 }                                       \
 int NAME ## Fifo_Shift_L (void) {       \
-  TYPE volatile *nextPutPt;             \
-  if(NAME## PutPt == NAME ## GetPt ){   \
-		printf();\
+  if(NAME## PutPt <= NAME ## Fifo_Level_Min){   \
 		return(FAIL);                       \
   }                                     \
-  nextPutPt = NAME ## PutPt - 1;        \
-  if(nextPutPt < NAME ## Fifo_Level_Min){     \
-    nextPutPt = NAME ## Fifo_Level_Max;    \
-  }                                     \
-  NAME ## PutPt = nextPutPt;            \
+  NAME ## PutPt--;            						\
   return(SUCCESS);                      \
 }                                       \
 int NAME ## Fifo_Shift_R (void) {       \
-  TYPE volatile *nextPutPt;             \
-  if(NAME## PutPt == NAME ## GetPt ){   \
+  if(NAME## PutPt == NAME ## Fifo_Level_Max ){   \
     return(FAIL);                       \
   }                                     \
-  nextPutPt = NAME ## PutPt + 1;        \
-  if(nextPutPt > NAME ## Fifo_Level_Max){     \
-    nextPutPt = NAME ## Fifo_Level_Min;    \
-  }                                     \
-  NAME ## PutPt = nextPutPt;            \
+  NAME ## PutPt++;					            \
   return(SUCCESS);                      \
 }                                       \
 int NAME ## Fifo_Get (TYPE *datapt){    \
