@@ -356,7 +356,7 @@ void Decode_ESC_SEQ(char letter){
 			read_counter=0; 
 			switch(letter){
 				case 68:
-					key=LEFT_ARROW_KEY;
+					key=LEFT_ARROW_KEY; 							 //----LEFT----------
 					if(WorkPutPt>WorkFifo_Level_Min){
 						WorkFifo_Shift_L();	
 						USB_UART_PrintChar(27); 				 //echo to terminal
@@ -367,7 +367,7 @@ void Decode_ESC_SEQ(char letter){
 				  //cursor_pos= WorkPutPt-&WorkFifo[0][0];
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
-				case 67:
+				case 67:															//----RIHGT----------
 
 					key=RIGHT_ARROW_KEY;
 				  // force user to use spacebar to delimit string args
@@ -382,7 +382,7 @@ void Decode_ESC_SEQ(char letter){
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 66:							
-					key=DOWN_ARROW_KEY;
+					key=DOWN_ARROW_KEY;									//----DOWN----------
 					//TODO: add code.  Need 2D SW fifo array
 				  if(Next_Fifo_Level>0){ 
 						Next_Fifo_Level--;
@@ -412,8 +412,8 @@ void Decode_ESC_SEQ(char letter){
 					// that it will match the terminal cursor position
 					//printf("%s ",WorkFifo[0]); //print previous command
 					break;
-				case 65:						
-					key=UP_ARROW_KEY;
+				case 65:														
+					key=UP_ARROW_KEY;											//----UP----------
 					//TODO: add code.  Need 2D SW fifo array
 					if(Next_Fifo_Level<Current_Fifo_Level-1){ // bug detect at 0 to 5 (required two down clicks)
 						Next_Fifo_Level++;
