@@ -302,7 +302,7 @@ void USB_UART_HandleRXBuffer(void){
 						key=INVALID_KEY; // reset key to default state
 						printf("@user >> ");		// ready for next cmd			
 
-				} else if (letter == 127) {              // handle backspace
+				} else if (letter == 127) {              // handle backspace******
 						if(WorkPutPt>WorkFifo_Level_Min){
 							USB_UART_PrintChar(letter); 				 //echo to terminal	
 							WorkFifo_Pop();      // remove a char from the end of the fifo
@@ -323,10 +323,7 @@ void USB_UART_HandleRXBuffer(void){
 							WorkFifo_Put(letter);       // if not one of the escape codes put char in temporary working fifo
 																									 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
 																									 // these code are ignored in SW FIFO
-																									 // if need to support for some odd reason, a patch is needed
-							//save put pointer
-							RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]=WorkPutPt;
-				
+																									 // if need to support for some odd reason, a patch is needed				
 						} else{
 							
 							Decode_ESC_SEQ(letter);
