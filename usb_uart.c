@@ -323,7 +323,15 @@ void USB_UART_HandleRXBuffer(void){
 							WorkFifo_Put(letter);       // if not one of the escape codes put char in temporary working fifo
 																									 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
 																									 // these code are ignored in SW FIFO
-																									 // if need to support for some odd reason, a patch is needed				
+																									 // if need to support for some odd reason, a patch is needed
+							if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){  //this code is need for intial unsaved state where right arrow key is used
+								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt; //used Current instead of Next just in case enter key is not pressed
+																																		//bc during query and editing mode it can overite the previous pointer
+																																		//note:this code pairs with the right arrow code below
+																																		//the backspace pairs witht he left arrow code below
+																																		//notice how the "arrow key" conditions below is related to the pointer saved here
+							}
+							
 						} else{
 							
 							Decode_ESC_SEQ(letter);
@@ -375,7 +383,9 @@ void Decode_ESC_SEQ(char letter){
 				  // force user to use spacebar to delimit string args
 				  // or else we need to support multi string parsing (multi null \0)
 				  //
-				  if(WorkPutPt<RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
+				  // next is different from current only when down or up keys is pressed
+				  //
+				  if(WorkPutPt<RxFifo_Ptr [Next_Fifo_Level][PUT_PTR] || WorkPutPt<RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]){
 							WorkFifo_Shift_R();
 							USB_UART_PrintChar(27); 				 //echo to terminal
 							USB_UART_PrintChar(91); 				 //echo to terminal
@@ -389,12 +399,17 @@ void Decode_ESC_SEQ(char letter){
 				  if(Next_Fifo_Level>0){ 
 						Next_Fifo_Level--;
 				  }else{
-						Next_Fifo_Level=Current_Fifo_Level-1; //wrap around  
-																	// wrap bug if press down arrow without first entering a cmd
-																	// because Fifo_Depth needs to be at least 1
-																	// w/o entering a cmd bypasses this requirement-->hardfault
+							
+							if(Next_Fifo_Level!=Current_Fifo_Level){//this only works when current fifo level != next fifo level 
+																											//i.e. intial state current is 0 so we can't subtract it
+								Next_Fifo_Level=Current_Fifo_Level-1; //wrap around 
+
+							}else{
+								//printf("break");
+								break;
+							}
 				  }
-					
+
 					// void * memcpy ( void * destination, const void * source, size_t num );
 					// copy current cmd selection to temporary fifo
 				  memcpy ( WorkFifo, RxFifo[Next_Fifo_Level], SIZE_WIDTH );
@@ -410,7 +425,6 @@ void Decode_ESC_SEQ(char letter){
 					//<ESC>[2K Erases the entire current line.
 					printf("%c[2K\r",0x1B);//extra \r to cover the case where cursor is not at 0
 																						
-					// copy cmd to temporary fifo
 					printf("@user >> %s",WorkFifo[0]); //print previous command
 					// if we don't decrement the put ptr we need to print out the termination so
 					// that it will match the terminal cursor position
@@ -418,13 +432,16 @@ void Decode_ESC_SEQ(char letter){
 					break;
 				case 65:														
 					key=UP_ARROW_KEY;											//----UP----------
-					//TODO: add code.  Need 2D SW fifo array
+					//TODO:need to rectify this -1 bug at initial state where this condition is always true (0-1=2^32-1)
+				  //
 					if(Next_Fifo_Level<Current_Fifo_Level-1){ // bug detect at 0 to 5 (required two down clicks)
 						Next_Fifo_Level++;
 				  }else{
-						Next_Fifo_Level=0; // wrap bug if press down arrow without first entering a cmd
-																	// because Fifo_Depth needs to be at least 1
-																	// w/o entering a cmd bypasses this requirement
+						if(Next_Fifo_Level!=Current_Fifo_Level){
+							Next_Fifo_Level=0; // wrap around
+						}else{
+							break; // break when next=current i.e. initial state
+						}
 				  }
 					
 					// copy current cmd selection to temporary fifo
@@ -439,7 +456,7 @@ void Decode_ESC_SEQ(char letter){
 					//<ESC>[2K Erases the entire current line.
 					printf("%c[2K\r",0x1B);//extra \r to cover the case where cursor is not at 0
 																									
-					printf("@user >> %s",RxFifo[Next_Fifo_Level]); //print previous command
+					printf("@user >> %s",WorkFifo[0]); //print previous command
 					break;
 				default:	
 					key = INVALID_KEY;
