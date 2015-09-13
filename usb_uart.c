@@ -257,8 +257,9 @@ void USB_UART_HandleRXBuffer(void){
 										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; // save new put pointer
 									
 								}else{
-									// the max index is updated else where (backspace handler code)
-										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max;
+									// the max index is updated else where (backspace handler code)									
+									// RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=RxFifo_Ptr [Next_Fifo_Level][PUT_PTR];  
+									 RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max;
 								}
 
 								
@@ -350,7 +351,8 @@ void USB_UART_HandleRXBuffer(void){
 																									 // these code are ignored in SW FIFO
 																									 // if need to support for some odd reason, a patch is needed
 							if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){  //this code is need for intial unsaved state where right arrow key is used
-								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt; //used Current instead of Next just in case enter key is not pressed
+								WorkPutPt_Max=WorkPutPt;// new max
+								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; //used Current instead of Next just in case enter key is not pressed
 																																		//bc during query and editing mode it can overite the previous pointer
 																																		//note:this code pairs with the right arrow code below
 																																		//the backspace pairs witht he left arrow code below
@@ -410,20 +412,22 @@ void Decode_ESC_SEQ(char letter){
 				  //
 				  // next is different from current only when down or up keys is pressed
 				  //
-				/*
+				
 				  if(WorkPutPt<WorkPutPt_Max){
 							WorkFifo_Shift_R();
 							USB_UART_PrintChar(27); 				 //echo to terminal
 							USB_UART_PrintChar(91); 				 //echo to terminal
 							USB_UART_PrintChar(67); 				 //echo to terminal
 					}
-				*/
+				
+				/*
 				  if(WorkPutPt<RxFifo_Ptr [Next_Fifo_Level][PUT_PTR] || WorkPutPt<RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]){
 							WorkFifo_Shift_R();
 							USB_UART_PrintChar(27); 				 //echo to terminal
 							USB_UART_PrintChar(91); 				 //echo to terminal
 							USB_UART_PrintChar(67); 				 //echo to terminal
 					}
+					*/
 				//TODO: add code to move fifo pointer similar to backspace code
 					break;
 				case 66:							
@@ -445,6 +449,7 @@ void Decode_ESC_SEQ(char letter){
 					// TODO: load workingFifo pointers according to RxFifo pointers *RELATIVE* positions
 					
 					put_offset=(RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]-&WorkFifo[0][0]);
+					
 					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
