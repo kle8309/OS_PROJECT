@@ -115,6 +115,10 @@
       <TargetDriverDllRegistry>
         <SetRegEntry>
           <Number>0</Number>
+          <Key>DLGUARM</Key>
+        </SetRegEntry>
+        <SetRegEntry>
+          <Number>0</Number>
           <Key>DLGTARM</Key>
           <Name>(1010=956,221,1366,768,0)(1007=113,144,290,408,0)(1008=-1,-1,-1,-1,0)(1009=-1,-1,-1,-1,0)(1012=-1,-1,-1,-1,0)</Name>
         </SetRegEntry>
@@ -138,9 +142,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>240</LineNumber>
+          <LineNumber>447</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>2942</Address>
+          <Address>1522</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -154,9 +158,9 @@
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>374</LineNumber>
+          <LineNumber>258</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>1678</Address>
+          <Address>3016</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -165,14 +169,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\usb_uart.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\tivaOS\usb_uart.c\374</Expression>
+          <Expression></Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>307</LineNumber>
+          <LineNumber>253</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>3210</Address>
+          <Address>2988</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -181,12 +185,12 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>.\usb_uart.c</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\tivaOS\usb_uart.c\307</Expression>
+          <Expression></Expression>
         </Bp>
         <Bp>
           <Number>3</Number>
           <Type>0</Type>
-          <LineNumber>359</LineNumber>
+          <LineNumber>256</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
@@ -202,7 +206,23 @@
         <Bp>
           <Number>4</Number>
           <Type>0</Type>
-          <LineNumber>361</LineNumber>
+          <LineNumber>261</LineNumber>
+          <EnabledFlag>1</EnabledFlag>
+          <Address>0</Address>
+          <ByteObject>0</ByteObject>
+          <HtxType>0</HtxType>
+          <ManyObjects>0</ManyObjects>
+          <SizeOfObject>0</SizeOfObject>
+          <BreakByAccess>0</BreakByAccess>
+          <BreakIfRCount>0</BreakIfRCount>
+          <Filename>.\usb_uart.c</Filename>
+          <ExecCommand></ExecCommand>
+          <Expression></Expression>
+        </Bp>
+        <Bp>
+          <Number>5</Number>
+          <Type>0</Type>
+          <LineNumber>450</LineNumber>
           <EnabledFlag>1</EnabledFlag>
           <Address>0</Address>
           <ByteObject>0</ByteObject>
@@ -250,91 +270,29 @@
         <Ww>
           <count>6</count>
           <WinNumber>1</WinNumber>
-          <ItemText>RxFifo_Ptr[Next_Fifo_Level][1]</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>1</WinNumber>
           <ItemText>\\tivaOS\usb_uart.c\RxFifo_Ptr</ItemText>
         </Ww>
         <Ww>
-          <count>8</count>
+          <count>7</count>
           <WinNumber>1</WinNumber>
           <ItemText>\\tivaOS\usb_uart.c\RxFifo</ItemText>
         </Ww>
         <Ww>
-          <count>9</count>
+          <count>8</count>
           <WinNumber>1</WinNumber>
           <ItemText>\\tivaOS\usb_uart.c\Current_Fifo_Level,0x0A</ItemText>
         </Ww>
         <Ww>
-          <count>10</count>
+          <count>9</count>
           <WinNumber>1</WinNumber>
           <ItemText>\\tivaOS\usb_uart.c\Next_Fifo_Level,0x0A</ItemText>
         </Ww>
         <Ww>
-          <count>11</count>
+          <count>10</count>
           <WinNumber>1</WinNumber>
-          <ItemText>WorkGetPt</ItemText>
+          <ItemText>WorkPutPt_Max</ItemText>
         </Ww>
       </WatchWindow1>
-      <WatchWindow2>
-        <Ww>
-          <count>0</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>\\tivaOS\usb_uart.c\cursor_pos,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>1</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>&amp;WorkFifo[0][0]</ItemText>
-        </Ww>
-        <Ww>
-          <count>2</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>WorkPutPt</ItemText>
-        </Ww>
-        <Ww>
-          <count>3</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>RxFifo</ItemText>
-        </Ww>
-        <Ww>
-          <count>4</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>WorkPutPt-1</ItemText>
-        </Ww>
-        <Ww>
-          <count>5</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>WorkGetPt</ItemText>
-        </Ww>
-        <Ww>
-          <count>6</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>put_offset,0x0A</ItemText>
-        </Ww>
-        <Ww>
-          <count>7</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>RxFifo_Ptr</ItemText>
-        </Ww>
-        <Ww>
-          <count>8</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>RxFifo_Ptr [Current_Fifo_Level][0]</ItemText>
-        </Ww>
-        <Ww>
-          <count>9</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>Current_Fifo_Level</ItemText>
-        </Ww>
-        <Ww>
-          <count>10</count>
-          <WinNumber>2</WinNumber>
-          <ItemText>Next_Fifo_Level</ItemText>
-        </Ww>
-      </WatchWindow2>
       <MemoryWindow1>
         <Mm>
           <WinNumber>1</WinNumber>
@@ -390,7 +348,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>276</TopLine>
+      <TopLine>271</TopLine>
       <CurrentLine>277</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\startup.s</PathWithFileName>
@@ -406,7 +364,7 @@
       <Focus>0</Focus>
       <ColumnNumber>0</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>66</TopLine>
+      <TopLine>61</TopLine>
       <CurrentLine>67</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\main.c</PathWithFileName>
@@ -452,10 +410,10 @@
       <FileType>1</FileType>
       <tvExp>1</tvExp>
       <Focus>0</Focus>
-      <ColumnNumber>73</ColumnNumber>
+      <ColumnNumber>104</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>58</TopLine>
-      <CurrentLine>20</CurrentLine>
+      <TopLine>224</TopLine>
+      <CurrentLine>252</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\usb_uart.c</PathWithFileName>
       <FilenameWithoutPath>usb_uart.c</FilenameWithoutPath>
@@ -502,7 +460,7 @@
       <Focus>0</Focus>
       <ColumnNumber>6</ColumnNumber>
       <tvExpOptDlg>0</tvExpOptDlg>
-      <TopLine>41</TopLine>
+      <TopLine>40</TopLine>
       <CurrentLine>45</CurrentLine>
       <bDave2>0</bDave2>
       <PathWithFileName>.\interpreter.c</PathWithFileName>

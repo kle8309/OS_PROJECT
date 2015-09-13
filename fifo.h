@@ -118,11 +118,11 @@ int NAME ## Fifo_Put (TYPE data){       \
     return(SUCCESS);                    \
   }                                     \
 }                                       \
-int NAME ## Fifo_Pop (void) {           \
+int NAME ## Fifo_Pop (TYPE data) {           \
   if(NAME## PutPt <= NAME ## Fifo_Level_Min ){   \
     return(FAIL);                       \
   }                                     \
-	*(--NAME ## PutPt) = 32;             \
+	*(--NAME ## PutPt) = data;             \
   return(SUCCESS);                      \
 }                                       \
 int NAME ## Fifo_Shift_L (void) {       \

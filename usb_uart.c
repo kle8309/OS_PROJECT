@@ -38,11 +38,11 @@ bool USB_BufferReady = false;
 */
 
 // create index implementation FIFO (see FIFO.h)
-AddPointerFifo(Rx, SIZE_DEPTH,SIZE_WIDTH, VAR_TYPE, FIFOSUCCESS, FIFOFAIL)
-AddPointerFifo(Tx, SIZE_DEPTH,SIZE_WIDTH, VAR_TYPE, FIFOSUCCESS, FIFOFAIL)
+AddPointerFifo(Rx, SIZE_DEPTH,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)
+AddPointerFifo(Tx, SIZE_DEPTH,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)
 // FYI: WORK_FIFO_LEVEL=1
-AddPointerFifo(Work,WORK_FIFO_LEVEL,SIZE_WIDTH, VAR_TYPE, FIFOSUCCESS, FIFOFAIL)
-
+AddPointerFifo(Work,WORK_FIFO_LEVEL,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)
+TYPE volatile *WorkPutPt_Max;	// for storing temporary max index
 /*
 ===================================================================================================
   USB_UART :: USB_UART_Init
@@ -88,7 +88,9 @@ void USB_UART_Init(void){
 
 	USB_UART_PrintChar(12); 				 //echo to terminal
   printf("Guardian Terminal v1.0\r\n");
-	printf("@user >> ");		
+	printf("@user >> ");
+	WorkPutPt_Max=WorkPutPt; //init max to current work ptr
+
 }
 
 
@@ -238,23 +240,33 @@ void USB_UART_HandleRXBuffer(void){
 						}
 						*/					
 						if(WorkFifo[0][0]!='\0'){
+							
+							
+							
+							
 								// new cmd detected when working put ptr is beyond previously saved put ptr
 								// Next_Fifo_Level index can range from the first index up to the Current_Fifo_Level
-								// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data					
+								// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data		
+
+
+//bug here workput ptr is not greater than next at first cmd so it goes to else and update the wrong max							
 								if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
 										WorkFifo_Put(0);          												  // 0 null terminate buffer
 									  //"string\0"_ after put the put ptr is the the right of null terminator so we subtract 1
-										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt-1; // save new put pointer
+										WorkPutPt_Max=WorkPutPt-1;
+										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; // save new put pointer
+									
 								}else{
-										// when working put is <= rx put
-										// keep rx put ptr where it is so when we load it
-										// the put ptr will be at the end
-										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=RxFifo_Ptr [Next_Fifo_Level][PUT_PTR];
+									// the max index is updated else where (backspace handler code)
+										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max;
 								}
+
+								
+								
 								
 								
 								// save workingFifo GET pointer to RxFifo_Ptr
-								// TODO: need to update the get ptr to pt towards the fifo array 
+								// TODO: need to update the get ptr to pt towards the fifo array (not array elements)
 								// one cmd per array
 								RxFifo_Ptr [Current_Fifo_Level][GET_PTR]=WorkGetPt;
 											
@@ -268,7 +280,7 @@ void USB_UART_HandleRXBuffer(void){
 								
 								//Fifo_Depth will be at least 1 at this point
 								//b/c the increment
-								if(Current_Fifo_Level==SIZE_DEPTH){										// wraparound when greater than max fifo depth
+								if(Current_Fifo_Level==SIZE_DEPTH){										// fifo wraparound when greater than max fifo depth
 									Current_Fifo_Level=0; 
 									Next_Fifo_Level=SIZE_DEPTH;
 								}	else if(Current_Fifo_Level>0){
@@ -302,11 +314,24 @@ void USB_UART_HandleRXBuffer(void){
 						key=INVALID_KEY; // reset key to default state
 						printf("@user >> ");		// ready for next cmd			
 
-				} else if (letter == 127) {              // handle backspace******
+				} else if (letter == 127) {              // handle backspace*********************************************
 						if(WorkPutPt>WorkFifo_Level_Min){
-							USB_UART_PrintChar(letter); 				 //echo to terminal	
-							WorkFifo_Pop();      // remove a char from the end of the fifo
+								USB_UART_PrintChar(letter); 		 //echo to terminal	
+								
+								//dtm if at end of string
+								if(*WorkPutPt=='\0'){
+										// pop with null terminator
+										WorkFifo_Pop(0); 
+										//WorkFifo_Pop(NULL); 
+										//WorkFifo_Pop('\0'); 
+									  // save this ptr
+										WorkPutPt_Max=WorkPutPt;
+								}else{
+										// pop with ascii spacebar 
+										WorkFifo_Pop(32);
+								}
 						}
+						
 				}	else {
 					// START ESCAPE SEQUENCE CODE
 					// 27 91 'D' or 'C' or 'B' or 'A'
@@ -385,6 +410,14 @@ void Decode_ESC_SEQ(char letter){
 				  //
 				  // next is different from current only when down or up keys is pressed
 				  //
+				/*
+				  if(WorkPutPt<WorkPutPt_Max){
+							WorkFifo_Shift_R();
+							USB_UART_PrintChar(27); 				 //echo to terminal
+							USB_UART_PrintChar(91); 				 //echo to terminal
+							USB_UART_PrintChar(67); 				 //echo to terminal
+					}
+				*/
 				  if(WorkPutPt<RxFifo_Ptr [Next_Fifo_Level][PUT_PTR] || WorkPutPt<RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]){
 							WorkFifo_Shift_R();
 							USB_UART_PrintChar(27); 				 //echo to terminal
@@ -398,17 +431,12 @@ void Decode_ESC_SEQ(char letter){
 					//TODO: add code.  Need 2D SW fifo array
 				  if(Next_Fifo_Level>0){ 
 						Next_Fifo_Level--;
-				  }else{
-							
-							if(Next_Fifo_Level!=Current_Fifo_Level){//this only works when current fifo level != next fifo level 
-																											//i.e. intial state current is 0 so we can't subtract it
-								Next_Fifo_Level=Current_Fifo_Level-1; //wrap around 
-
-							}else{
-								//printf("break");
-								break;
-							}
-				  }
+				  }else if (Current_Fifo_Level==0){
+							break; // don't reset to max index if at initial state
+					}else{
+							//next == 0 and current !=0 so we reset to max index "current-1" for wrap-around
+							Next_Fifo_Level=Current_Fifo_Level-1; 
+					}
 
 					// void * memcpy ( void * destination, const void * source, size_t num );
 					// copy current cmd selection to temporary fifo
@@ -420,6 +448,8 @@ void Decode_ESC_SEQ(char letter){
 					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
+					
+					WorkPutPt_Max=WorkPutPt; // save max at load time i.e. end of string index
 					
 					//reference: http://www.termsys.demon.co.uk/vtansi.htm
 					//<ESC>[2K Erases the entire current line.
@@ -433,16 +463,19 @@ void Decode_ESC_SEQ(char letter){
 				case 65:														
 					key=UP_ARROW_KEY;											//----UP----------
 					//TODO:need to rectify this -1 bug at initial state where this condition is always true (0-1=2^32-1)
-				  //
-					if(Next_Fifo_Level<Current_Fifo_Level-1){ // bug detect at 0 to 5 (required two down clicks)
+					if(Next_Fifo_Level<Current_Fifo_Level-1 && Current_Fifo_Level!=0 ){ // "Current_Fifo_Level!=0" => avoid query at initial state
+																																							// doesn't support query when current fifo index wraps around
+																																							// history of query reset when current fifo index wraps
+																																							// perhaps will support in future release																																						
 						Next_Fifo_Level++;
-				  }else{
-						if(Next_Fifo_Level!=Current_Fifo_Level){
+				  }else if(Current_Fifo_Level==0){
+						break; // don't reset to min index if at initial state
+					}else{
 							Next_Fifo_Level=0; // wrap around
-						}else{
-							break; // break when next=current i.e. initial state
-						}
-				  }
+					}
+					
+					
+					
 					
 					// copy current cmd selection to temporary fifo
 				  memcpy ( WorkFifo, RxFifo[Next_Fifo_Level], SIZE_WIDTH );
@@ -452,6 +485,8 @@ void Decode_ESC_SEQ(char letter){
 					get_offset=(RxFifo_Ptr [Next_Fifo_Level][GET_PTR]-&WorkFifo[0][0]);
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
+					
+					WorkPutPt_Max=WorkPutPt; // save max at load time i.e. end of string index
 					
 					//<ESC>[2K Erases the entire current line.
 					printf("%c[2K\r",0x1B);//extra \r to cover the case where cursor is not at 0
