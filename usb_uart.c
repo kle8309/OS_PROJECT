@@ -249,8 +249,9 @@ void USB_UART_HandleRXBuffer(void){
 								// Current_Fifo_Level always points to the next available buffer index in RxFifo to save data		
 
 
-//bug here workput ptr is not greater than next at first cmd so it goes to else and update the wrong max							
-								if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){
+//bug here workput ptr is not greater than next at first cmd so it goes to else and update the wrong max
+								//if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){							
+								if(WorkPutPt>WorkPutPt_Max){
 										WorkFifo_Put(0);          												  // 0 null terminate buffer
 									  //"string\0"_ after put the put ptr is the the right of null terminator so we subtract 1
 										WorkPutPt_Max=WorkPutPt-1;
@@ -327,9 +328,11 @@ void USB_UART_HandleRXBuffer(void){
 										//WorkFifo_Pop('\0'); 
 									  // save this ptr
 										WorkPutPt_Max=WorkPutPt;
+										printf("\n\r@work >> %s",WorkFifo[0]);
 								}else{
 										// pop with ascii spacebar 
 										WorkFifo_Pop(32);
+									  printf("\n\r@work >> %s",WorkFifo[0]);
 								}
 						}
 						
@@ -350,7 +353,7 @@ void USB_UART_HandleRXBuffer(void){
 																									 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
 																									 // these code are ignored in SW FIFO
 																									 // if need to support for some odd reason, a patch is needed
-							if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){  //this code is need for intial unsaved state where right arrow key is used
+							if(WorkPutPt>WorkPutPt_Max){  //this code is need for intial unsaved state where right arrow key is used
 								WorkPutPt_Max=WorkPutPt;// new max
 								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; //used Current instead of Next just in case enter key is not pressed
 																																		//bc during query and editing mode it can overite the previous pointer
@@ -454,7 +457,7 @@ void Decode_ESC_SEQ(char letter){
 					WorkPutPt = &WorkFifo[0][0]+put_offset;
 					WorkGetPt = &WorkFifo[0][0]+get_offset;
 					
-					WorkPutPt_Max=WorkPutPt; // save max at load time i.e. end of string index
+					WorkPutPt_Max=WorkPutPt; // load max at load time i.e. end of string index
 					
 					//reference: http://www.termsys.demon.co.uk/vtansi.htm
 					//<ESC>[2K Erases the entire current line.
