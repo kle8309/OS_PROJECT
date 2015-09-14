@@ -297,10 +297,12 @@ void USB_UART_HandleRXBuffer(void){
 						
 						// TODO: reset workingFifo pointers to 0 position 
 						WorkFifo_Pointer_RST();
+						WorkPutPt_Max=WorkPutPt;
 						// wipe Fifo clean
 						//void * memset ( void * ptr, int value, size_t num );
 						//memset ( WorkFifo[0], 0, SIZE_WIDTH);
 						WorkFifo_Clear();
+						
 						key=INVALID_KEY; // reset key to default state
 					                 // toggle buffer processing semaphore
 						printf("@user >> ");		// ready for next cmd			
@@ -309,7 +311,8 @@ void USB_UART_HandleRXBuffer(void){
 				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
 						USB_UART_PrintChar(letter); 				 //echo to terminal	
 						// reset workingFifo pointers to 0 position 
-						WorkFifo_Pointer_RST();					
+						WorkFifo_Pointer_RST();	
+						WorkPutPt_Max=WorkPutPt;					
 						// wipe Fifo clean
 						//memset ( WorkFifo[0], 0, SIZE_WIDTH);
 					  WorkFifo_Clear();

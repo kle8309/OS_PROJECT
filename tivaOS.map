@@ -849,40 +849,40 @@ Image Symbol Table
     i.UART0_Handler                          0x00000ab0   Section        0  usb_uart.o(i.UART0_Handler)
     i.USB_UART_Enable_Interrupt              0x00000b3c   Section        0  usb_uart.o(i.USB_UART_Enable_Interrupt)
     i.USB_UART_HandleRXBuffer                0x00000b54   Section        0  usb_uart.o(i.USB_UART_HandleRXBuffer)
-    i.USB_UART_Init                          0x00000d18   Section        0  usb_uart.o(i.USB_UART_Init)
-    i.USB_UART_PrintChar                     0x00000e50   Section        0  usb_uart.o(i.USB_UART_PrintChar)
-    i.WorkFifo_Clear                         0x00000e68   Section        0  usb_uart.o(i.WorkFifo_Clear)
-    i.WorkFifo_Init                          0x00000e84   Section        0  usb_uart.o(i.WorkFifo_Init)
-    i.WorkFifo_Pointer_RST                   0x00000ebc   Section        0  usb_uart.o(i.WorkFifo_Pointer_RST)
-    i.WorkFifo_Pop                           0x00000ee4   Section        0  usb_uart.o(i.WorkFifo_Pop)
-    i.WorkFifo_Put                           0x00000f10   Section        0  usb_uart.o(i.WorkFifo_Put)
-    i.WorkFifo_Shift_L                       0x00000f50   Section        0  usb_uart.o(i.WorkFifo_Shift_L)
-    i.WorkFifo_Shift_R                       0x00000f78   Section        0  usb_uart.o(i.WorkFifo_Shift_R)
-    i.__0printf$4                            0x00000fa0   Section        0  printf4.o(i.__0printf$4)
-    i.__scatterload_copy                     0x00000fc0   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x00000fce   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x00000fd0   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i._printf_core                           0x00000fe0   Section        0  printf4.o(i._printf_core)
-    _printf_core                             0x00000fe1   Thumb Code   548  printf4.o(i._printf_core)
-    i.commandList                            0x00001208   Section        0  st7735.o(i.commandList)
-    commandList                              0x00001209   Thumb Code    86  st7735.o(i.commandList)
-    i.commonInit                             0x00001260   Section        0  st7735.o(i.commonInit)
-    commonInit                               0x00001261   Thumb Code   340  st7735.o(i.commonInit)
-    i.fputc                                  0x000013e4   Section        0  main.o(i.fputc)
-    i.main                                   0x000013f4   Section        0  main.o(i.main)
-    i.setAddrWindow                          0x00001430   Section        0  st7735.o(i.setAddrWindow)
-    setAddrWindow                            0x00001431   Thumb Code   106  st7735.o(i.setAddrWindow)
-    i.writecommand                           0x000014a4   Section        0  st7735.o(i.writecommand)
-    writecommand                             0x000014a5   Thumb Code    40  st7735.o(i.writecommand)
-    i.writedata                              0x000014d4   Section        0  st7735.o(i.writedata)
-    writedata                                0x000014d5   Thumb Code    24  st7735.o(i.writedata)
-    .constdata                               0x000014f4   Section     2018  st7735.o(.constdata)
-    Font                                     0x000014f4   Data        1275  st7735.o(.constdata)
-    Bcmd                                     0x000019ef   Data         103  st7735.o(.constdata)
-    Rcmd1                                    0x00001a56   Data          59  st7735.o(.constdata)
-    Rcmd2green                               0x00001a91   Data          13  st7735.o(.constdata)
-    Rcmd2red                                 0x00001a9e   Data          13  st7735.o(.constdata)
-    Rcmd3                                    0x00001aab   Data          43  st7735.o(.constdata)
+    i.USB_UART_Init                          0x00000d28   Section        0  usb_uart.o(i.USB_UART_Init)
+    i.USB_UART_PrintChar                     0x00000e60   Section        0  usb_uart.o(i.USB_UART_PrintChar)
+    i.WorkFifo_Clear                         0x00000e78   Section        0  usb_uart.o(i.WorkFifo_Clear)
+    i.WorkFifo_Init                          0x00000e94   Section        0  usb_uart.o(i.WorkFifo_Init)
+    i.WorkFifo_Pointer_RST                   0x00000ecc   Section        0  usb_uart.o(i.WorkFifo_Pointer_RST)
+    i.WorkFifo_Pop                           0x00000ef4   Section        0  usb_uart.o(i.WorkFifo_Pop)
+    i.WorkFifo_Put                           0x00000f20   Section        0  usb_uart.o(i.WorkFifo_Put)
+    i.WorkFifo_Shift_L                       0x00000f60   Section        0  usb_uart.o(i.WorkFifo_Shift_L)
+    i.WorkFifo_Shift_R                       0x00000f88   Section        0  usb_uart.o(i.WorkFifo_Shift_R)
+    i.__0printf$4                            0x00000fb0   Section        0  printf4.o(i.__0printf$4)
+    i.__scatterload_copy                     0x00000fd0   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x00000fde   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x00000fe0   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i._printf_core                           0x00000ff0   Section        0  printf4.o(i._printf_core)
+    _printf_core                             0x00000ff1   Thumb Code   548  printf4.o(i._printf_core)
+    i.commandList                            0x00001218   Section        0  st7735.o(i.commandList)
+    commandList                              0x00001219   Thumb Code    86  st7735.o(i.commandList)
+    i.commonInit                             0x00001270   Section        0  st7735.o(i.commonInit)
+    commonInit                               0x00001271   Thumb Code   340  st7735.o(i.commonInit)
+    i.fputc                                  0x000013f4   Section        0  main.o(i.fputc)
+    i.main                                   0x00001404   Section        0  main.o(i.main)
+    i.setAddrWindow                          0x00001440   Section        0  st7735.o(i.setAddrWindow)
+    setAddrWindow                            0x00001441   Thumb Code   106  st7735.o(i.setAddrWindow)
+    i.writecommand                           0x000014b4   Section        0  st7735.o(i.writecommand)
+    writecommand                             0x000014b5   Thumb Code    40  st7735.o(i.writecommand)
+    i.writedata                              0x000014e4   Section        0  st7735.o(i.writedata)
+    writedata                                0x000014e5   Thumb Code    24  st7735.o(i.writedata)
+    .constdata                               0x00001504   Section     2018  st7735.o(.constdata)
+    Font                                     0x00001504   Data        1275  st7735.o(.constdata)
+    Bcmd                                     0x000019ff   Data         103  st7735.o(.constdata)
+    Rcmd1                                    0x00001a66   Data          59  st7735.o(.constdata)
+    Rcmd2green                               0x00001aa1   Data          13  st7735.o(.constdata)
+    Rcmd2red                                 0x00001aae   Data          13  st7735.o(.constdata)
+    Rcmd3                                    0x00001abb   Data          43  st7735.o(.constdata)
     .data                                    0x20000000   Section       44  st7735.o(.data)
     _width                                   0x2000000c   Data           2  st7735.o(.data)
     _height                                  0x2000000e   Data           2  st7735.o(.data)
@@ -1132,27 +1132,27 @@ Image Symbol Table
     TxFifo_Init                              0x00000a79   Thumb Code    36  usb_uart.o(i.TxFifo_Init)
     UART0_Handler                            0x00000ab1   Thumb Code   116  usb_uart.o(i.UART0_Handler)
     USB_UART_Enable_Interrupt                0x00000b3d   Thumb Code    18  usb_uart.o(i.USB_UART_Enable_Interrupt)
-    USB_UART_HandleRXBuffer                  0x00000b55   Thumb Code   368  usb_uart.o(i.USB_UART_HandleRXBuffer)
-    USB_UART_Init                            0x00000d19   Thumb Code   240  usb_uart.o(i.USB_UART_Init)
-    USB_UART_PrintChar                       0x00000e51   Thumb Code    18  usb_uart.o(i.USB_UART_PrintChar)
-    WorkFifo_Clear                           0x00000e69   Thumb Code    24  usb_uart.o(i.WorkFifo_Clear)
-    WorkFifo_Init                            0x00000e85   Thumb Code    36  usb_uart.o(i.WorkFifo_Init)
-    WorkFifo_Pointer_RST                     0x00000ebd   Thumb Code    26  usb_uart.o(i.WorkFifo_Pointer_RST)
-    WorkFifo_Pop                             0x00000ee5   Thumb Code    34  usb_uart.o(i.WorkFifo_Pop)
-    WorkFifo_Put                             0x00000f11   Thumb Code    46  usb_uart.o(i.WorkFifo_Put)
-    WorkFifo_Shift_L                         0x00000f51   Thumb Code    30  usb_uart.o(i.WorkFifo_Shift_L)
-    WorkFifo_Shift_R                         0x00000f79   Thumb Code    30  usb_uart.o(i.WorkFifo_Shift_R)
-    __0printf$4                              0x00000fa1   Thumb Code    22  printf4.o(i.__0printf$4)
-    __1printf$4                              0x00000fa1   Thumb Code     0  printf4.o(i.__0printf$4)
-    __2printf                                0x00000fa1   Thumb Code     0  printf4.o(i.__0printf$4)
-    __scatterload_copy                       0x00000fc1   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x00000fcf   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x00000fd1   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    fputc                                    0x000013e5   Thumb Code    16  main.o(i.fputc)
-    main                                     0x000013f5   Thumb Code    56  main.o(i.main)
-    dBfs                                     0x00001ad6   Data         512  st7735.o(.constdata)
-    Region$$Table$$Base                      0x00001cd8   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00001cf8   Number         0  anon$$obj.o(Region$$Table)
+    USB_UART_HandleRXBuffer                  0x00000b55   Thumb Code   384  usb_uart.o(i.USB_UART_HandleRXBuffer)
+    USB_UART_Init                            0x00000d29   Thumb Code   240  usb_uart.o(i.USB_UART_Init)
+    USB_UART_PrintChar                       0x00000e61   Thumb Code    18  usb_uart.o(i.USB_UART_PrintChar)
+    WorkFifo_Clear                           0x00000e79   Thumb Code    24  usb_uart.o(i.WorkFifo_Clear)
+    WorkFifo_Init                            0x00000e95   Thumb Code    36  usb_uart.o(i.WorkFifo_Init)
+    WorkFifo_Pointer_RST                     0x00000ecd   Thumb Code    26  usb_uart.o(i.WorkFifo_Pointer_RST)
+    WorkFifo_Pop                             0x00000ef5   Thumb Code    34  usb_uart.o(i.WorkFifo_Pop)
+    WorkFifo_Put                             0x00000f21   Thumb Code    46  usb_uart.o(i.WorkFifo_Put)
+    WorkFifo_Shift_L                         0x00000f61   Thumb Code    30  usb_uart.o(i.WorkFifo_Shift_L)
+    WorkFifo_Shift_R                         0x00000f89   Thumb Code    30  usb_uart.o(i.WorkFifo_Shift_R)
+    __0printf$4                              0x00000fb1   Thumb Code    22  printf4.o(i.__0printf$4)
+    __1printf$4                              0x00000fb1   Thumb Code     0  printf4.o(i.__0printf$4)
+    __2printf                                0x00000fb1   Thumb Code     0  printf4.o(i.__0printf$4)
+    __scatterload_copy                       0x00000fd1   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x00000fdf   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x00000fe1   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    fputc                                    0x000013f5   Thumb Code    16  main.o(i.fputc)
+    main                                     0x00001405   Thumb Code    56  main.o(i.main)
+    dBfs                                     0x00001ae6   Data         512  st7735.o(.constdata)
+    Region$$Table$$Base                      0x00001ce8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00001d08   Number         0  anon$$obj.o(Region$$Table)
     StX                                      0x20000000   Data           4  st7735.o(.data)
     StY                                      0x20000004   Data           4  st7735.o(.data)
     StTextColor                              0x20000008   Data           2  st7735.o(.data)
@@ -1205,9 +1205,9 @@ Memory Map of the image
 
   Image Entry point : 0x0000026d
 
-  Load Region LR_1 (Base: 0x00000000, Size: 0x00001db4, Max: 0xffffffff, ABSOLUTE)
+  Load Region LR_1 (Base: 0x00000000, Size: 0x00001dc4, Max: 0xffffffff, ABSOLUTE)
 
-    Execution Region ER_RO (Base: 0x00000000, Size: 0x00001cf8, Max: 0xffffffff, ABSOLUTE)
+    Execution Region ER_RO (Base: 0x00000000, Size: 0x00001d08, Max: 0xffffffff, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -1249,33 +1249,33 @@ Memory Map of the image
     0x00000a78   0x00000038   Code   RO          398    i.TxFifo_Init       usb_uart.o
     0x00000ab0   0x0000008c   Code   RO          406    i.UART0_Handler     usb_uart.o
     0x00000b3c   0x00000018   Code   RO          408    i.USB_UART_Enable_Interrupt  usb_uart.o
-    0x00000b54   0x000001c4   Code   RO          409    i.USB_UART_HandleRXBuffer  usb_uart.o
-    0x00000d18   0x00000138   Code   RO          410    i.USB_UART_Init     usb_uart.o
-    0x00000e50   0x00000018   Code   RO          411    i.USB_UART_PrintChar  usb_uart.o
-    0x00000e68   0x0000001c   Code   RO          412    i.WorkFifo_Clear    usb_uart.o
-    0x00000e84   0x00000038   Code   RO          414    i.WorkFifo_Init     usb_uart.o
-    0x00000ebc   0x00000028   Code   RO          416    i.WorkFifo_Pointer_RST  usb_uart.o
-    0x00000ee4   0x0000002c   Code   RO          417    i.WorkFifo_Pop      usb_uart.o
-    0x00000f10   0x00000040   Code   RO          418    i.WorkFifo_Put      usb_uart.o
-    0x00000f50   0x00000028   Code   RO          419    i.WorkFifo_Shift_L  usb_uart.o
-    0x00000f78   0x00000028   Code   RO          420    i.WorkFifo_Shift_R  usb_uart.o
-    0x00000fa0   0x00000020   Code   RO         1090    i.__0printf$4       mc_w.l(printf4.o)
-    0x00000fc0   0x0000000e   Code   RO         1355    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x00000fce   0x00000002   Code   RO         1356    i.__scatterload_null  mc_w.l(handlers.o)
-    0x00000fd0   0x0000000e   Code   RO         1357    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x00000fde   0x00000002   PAD
-    0x00000fe0   0x00000228   Code   RO         1097    i._printf_core      mc_w.l(printf4.o)
-    0x00001208   0x00000056   Code   RO          141    i.commandList       st7735.o
-    0x0000125e   0x00000002   PAD
-    0x00001260   0x00000184   Code   RO          142    i.commonInit        st7735.o
-    0x000013e4   0x00000010   Code   RO           12    i.fputc             main.o
-    0x000013f4   0x0000003c   Code   RO           13    i.main              main.o
-    0x00001430   0x00000074   Code   RO          147    i.setAddrWindow     st7735.o
-    0x000014a4   0x00000030   Code   RO          148    i.writecommand      st7735.o
-    0x000014d4   0x00000020   Code   RO          149    i.writedata         st7735.o
-    0x000014f4   0x000007e2   Data   RO          151    .constdata          st7735.o
-    0x00001cd6   0x00000002   PAD
-    0x00001cd8   0x00000020   Data   RO         1353    Region$$Table       anon$$obj.o
+    0x00000b54   0x000001d4   Code   RO          409    i.USB_UART_HandleRXBuffer  usb_uart.o
+    0x00000d28   0x00000138   Code   RO          410    i.USB_UART_Init     usb_uart.o
+    0x00000e60   0x00000018   Code   RO          411    i.USB_UART_PrintChar  usb_uart.o
+    0x00000e78   0x0000001c   Code   RO          412    i.WorkFifo_Clear    usb_uart.o
+    0x00000e94   0x00000038   Code   RO          414    i.WorkFifo_Init     usb_uart.o
+    0x00000ecc   0x00000028   Code   RO          416    i.WorkFifo_Pointer_RST  usb_uart.o
+    0x00000ef4   0x0000002c   Code   RO          417    i.WorkFifo_Pop      usb_uart.o
+    0x00000f20   0x00000040   Code   RO          418    i.WorkFifo_Put      usb_uart.o
+    0x00000f60   0x00000028   Code   RO          419    i.WorkFifo_Shift_L  usb_uart.o
+    0x00000f88   0x00000028   Code   RO          420    i.WorkFifo_Shift_R  usb_uart.o
+    0x00000fb0   0x00000020   Code   RO         1090    i.__0printf$4       mc_w.l(printf4.o)
+    0x00000fd0   0x0000000e   Code   RO         1355    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x00000fde   0x00000002   Code   RO         1356    i.__scatterload_null  mc_w.l(handlers.o)
+    0x00000fe0   0x0000000e   Code   RO         1357    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x00000fee   0x00000002   PAD
+    0x00000ff0   0x00000228   Code   RO         1097    i._printf_core      mc_w.l(printf4.o)
+    0x00001218   0x00000056   Code   RO          141    i.commandList       st7735.o
+    0x0000126e   0x00000002   PAD
+    0x00001270   0x00000184   Code   RO          142    i.commonInit        st7735.o
+    0x000013f4   0x00000010   Code   RO           12    i.fputc             main.o
+    0x00001404   0x0000003c   Code   RO           13    i.main              main.o
+    0x00001440   0x00000074   Code   RO          147    i.setAddrWindow     st7735.o
+    0x000014b4   0x00000030   Code   RO          148    i.writecommand      st7735.o
+    0x000014e4   0x00000020   Code   RO          149    i.writedata         st7735.o
+    0x00001504   0x000007e2   Data   RO          151    .constdata          st7735.o
+    0x00001ce6   0x00000002   PAD
+    0x00001ce8   0x00000020   Data   RO         1353    Region$$Table       anon$$obj.o
 
 
     Execution Region ER_RW (Base: 0x20000000, Size: 0x000000bc, Max: 0xffffffff, ABSOLUTE)
@@ -1314,10 +1314,10 @@ Image component sizes
        124          6          0          0          0        379   pll.o
       1106        140       2018         44          0       9555   st7735.o
        672        622          0          0       1024        892   startup.o
-      2024        414          0        112       2368       9273   usb_uart.o
+      2040        414          0        112       2368       9281   usb_uart.o
 
     ----------------------------------------------------------------------
-      4456       1276       2052        184       3492      30124   Object Totals
+      4472       1276       2052        184       3492      30132   Object Totals
          0          0         32          0          0          0   (incl. Generated)
          2          0          2          0          4          0   (incl. Padding)
 
@@ -1363,15 +1363,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      5364       1306       2052        188       3492      28752   Grand Totals
-      5364       1306       2052        188       3492      28752   ELF Image Totals
-      5364       1306       2052        188          0          0   ROM Totals
+      5380       1306       2052        188       3492      28760   Grand Totals
+      5380       1306       2052        188       3492      28760   ELF Image Totals
+      5380       1306       2052        188          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                 7416 (   7.24kB)
+    Total RO  Size (Code + RO Data)                 7432 (   7.26kB)
     Total RW  Size (RW Data + ZI Data)              3680 (   3.59kB)
-    Total ROM Size (Code + RO Data + RW Data)       7604 (   7.43kB)
+    Total ROM Size (Code + RO Data + RW Data)       7620 (   7.44kB)
 
 ==============================================================================
 
