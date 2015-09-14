@@ -255,15 +255,15 @@ void USB_UART_HandleRXBuffer(void){
 										WorkFifo_Put(0);          												  // 0 null terminate buffer
 									  //"string\0"_ after put the put ptr is the the right of null terminator so we subtract 1
 										WorkPutPt_Max=WorkPutPt-1;
-										RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; // save new put pointer
+									//RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; // save new put pointer
 									
 								}else{
 									// the max index is updated else where (backspace handler code)									
 									// RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=RxFifo_Ptr [Next_Fifo_Level][PUT_PTR];  
-									 RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max;
+									//RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max;
 								}
 
-								
+								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max;
 								
 								
 								
@@ -328,11 +328,11 @@ void USB_UART_HandleRXBuffer(void){
 										//WorkFifo_Pop('\0'); 
 									  // save this ptr
 										WorkPutPt_Max=WorkPutPt;
-										printf("\n\r@work >> %s",WorkFifo[0]);
+										//printf("\n\r@work >> %s",WorkFifo[0]);
 								}else{
 										// pop with ascii spacebar 
 										WorkFifo_Pop(32);
-									  printf("\n\r@work >> %s",WorkFifo[0]);
+									  //printf("\n\r@work >> %s",WorkFifo[0]);
 								}
 						}
 						
@@ -345,6 +345,10 @@ void USB_UART_HandleRXBuffer(void){
 					//if first letter is not the starter code we can skip the rest
 					// on non-zero read_counter letter is allowed to have number other than 27
 						if(letter != 27 && read_counter == 0){
+							
+							
+							//****************************************************************
+							// 																			handle char
 							USB_UART_PrintChar(letter); 				 //echo to terminal
 							// TODO:
 						// change put function to put to temporary fifo
@@ -354,8 +358,8 @@ void USB_UART_HandleRXBuffer(void){
 																									 // these code are ignored in SW FIFO
 																									 // if need to support for some odd reason, a patch is needed
 							if(WorkPutPt>WorkPutPt_Max){  //this code is need for intial unsaved state where right arrow key is used
-								WorkPutPt_Max=WorkPutPt;// new max
-								RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; //used Current instead of Next just in case enter key is not pressed
+								WorkPutPt_Max=WorkPutPt;    // save new max
+								//RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; //used Current instead of Next just in case enter key is not pressed
 																																		//bc during query and editing mode it can overite the previous pointer
 																																		//note:this code pairs with the right arrow code below
 																																		//the backspace pairs witht he left arrow code below
