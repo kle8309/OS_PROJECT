@@ -470,6 +470,11 @@
               <FileType>1</FileType>
               <FilePath>.\os.c</FilePath>
             </File>
+            <File>
+              <FileName>fifo.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\fifo.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>

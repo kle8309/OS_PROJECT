@@ -26,49 +26,7 @@
  */
 
 #include "FIFO.h"
-
-// Two-index implementation of the transmit FIFO
-// can hold 0 to TXFIFOSIZE elements
-#define TXFIFOSIZE 16 // must be a power of 2
-#define TXFIFOSUCCESS 1
-#define TXFIFOFAIL    0
-
-typedef char txDataType;
-unsigned long volatile TxPutI;// put next
-unsigned long volatile TxGetI;// get next
-txDataType static TxFifo[TXFIFOSIZE];
-
-// initialize index FIFO
-void TxFifo_Init(void){ long sr;
-  sr = StartCritical(); // make atomic
-  TxPutI = TxGetI = 0;  // Empty
-  EndCritical(sr);
-}
-// add element to end of index FIFO
-// return TXFIFOSUCCESS if successful
-int TxFifo_Put(txDataType data){
-  if((TxPutI-TxGetI) & ~(TXFIFOSIZE-1)){
-    return(TXFIFOFAIL); // Failed, fifo full
-  }
-  TxFifo[TxPutI&(TXFIFOSIZE-1)] = data; // put
-  TxPutI++;  // Success, update
-  return(TXFIFOSUCCESS);
-}
-// remove element from front of index FIFO
-// return TXFIFOSUCCESS if successful
-int TxFifo_Get(txDataType *datapt){
-  if(TxPutI == TxGetI ){
-    return(TXFIFOFAIL); // Empty if TxPutI=TxGetI
-  }
-  *datapt = TxFifo[TxGetI&(TXFIFOSIZE-1)];
-  TxGetI++;  // Success, update
-  return(TXFIFOSUCCESS);
-}
-// number of elements in index FIFO
-// 0 to TXFIFOSIZE-1
-unsigned short TxFifo_Size(void){
- return ((unsigned short)(TxPutI-TxGetI));
-}
+#include <stdint.h>
 
 // Two-pointer implementation of the receive FIFO
 // can hold 0 to RXFIFOSIZE-1 elements
@@ -80,6 +38,42 @@ typedef char rxDataType;
 rxDataType volatile *RxPutPt; // put next
 rxDataType volatile *RxGetPt; // get next
 rxDataType static RxFifo[RXFIFOSIZE];
+
+
+#define FIFO_SIZE 	 		64 			  // need to sort this out for the rest of the files
+#define SIZE_DEPTH   		16       	// size of the FIFOs 
+#define SIZE_WIDTH   		64       	// size of the FIFOs 
+#define GET_PTR 		 		0  				// index of get pointer within fifo buffer 
+#define PUT_PTR 		 		1  				// index of put pointer within fifo buffer 
+#define WORK_FIFO_LEVEL 1     		// temporary fifo buffer has only 1 level 
+#define FIFOSUCCESS 		1         // return value on success
+#define FIFOFAIL    		0         // return value on failure
+#define TYPE char									// type def for fifo elements used in sw fifo init
+
+typedef struct {
+	
+	uint8_t volatile * p_put; //
+	uint8_t volatile * p_get; //
+	uint8_t          * fifo_level_min; // address to fifo min   
+	uint8_t          * fifo_level_max; // address to fifo max
+	
+} fifo_t;
+
+// TODO KL:
+// *********************************************************************************************
+void Fifo_Init (fifo_t * p_fifo)
+{ 
+	uint8_t volatile * p_array [SIZE_DEPTH][NUM_PTR]; // pointers for each array row  
+	uint8_t static     fifo[SIZE_DEPTH][SIZE_WIDTH];  // fixed-size 2d array 
+	fifo_t  
+	long sr;  
+  sr = StartCritical();                 
+  p_fifo->p_put = p_get = &NAME ## Fifo[0][0]; 
+	NAME ## Fifo_Level_Min=&NAME ## Fifo[0][0]; 
+	NAME ## Fifo_Level_Max=&NAME ## Fifo[0][SIZE_WIDTH]; 
+	EndCritical(sr);                      
+}   
+
 
 // initialize pointer FIFO
 void RxFifo_Init(void){ long sr;

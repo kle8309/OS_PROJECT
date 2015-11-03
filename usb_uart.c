@@ -1,6 +1,4 @@
 #include "tm4c123gh6pm.h"
-
-
 #include "interpreter.h"
 #include "fifo.h"
 
@@ -17,11 +15,7 @@
 ========================================================================================================================
 */
 
-//#define FIFOSIZE   64         // size of the FIFOs (must be power of 2)
-//#define SIZE_DEPTH   8         // size of the FIFOs (must be power of 2)
-//#define SIZE_WIDTH   64         // size of the FIFOs (must be power of 2)
-//#define FIFOSUCCESS 1         // return value on success
-//#define FIFOFAIL    0         // return value on failure
+
 
 /*
 ========================================================================================================================
@@ -33,16 +27,17 @@ bool USB_BufferReady = false;
 
 /*
 ========================================================================================================================
-==========                                         USB UART FUNCTIONS                                         ==========
+==========                                         FIFO Objects 					                                    ==========
 ========================================================================================================================
 */
 
 // create index implementation FIFO (see FIFO.h)
 AddPointerFifo(Rx, SIZE_DEPTH,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)
 AddPointerFifo(Tx, SIZE_DEPTH,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)
-// FYI: WORK_FIFO_LEVEL=1
-AddPointerFifo(Work,WORK_FIFO_LEVEL,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)
+
+AddPointerFifo(Work,WORK_FIFO_LEVEL,SIZE_WIDTH, TYPE, FIFOSUCCESS, FIFOFAIL)// FYI: WORK_FIFO_LEVEL=1
 TYPE volatile *WorkPutPt_Max;	// for storing temporary max index
+
 /*
 ===================================================================================================
   USB_UART :: USB_UART_Init
@@ -250,7 +245,9 @@ void USB_UART_HandleRXBuffer(void){
 
 
 //bug here workput ptr is not greater than next at first cmd so it goes to else and update the wrong max
-								//if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){							
+								//if(WorkPutPt>RxFifo_Ptr [Next_Fifo_Level][PUT_PTR]){	
+							//TODO: might not need to terminate with NULL since default is NULL for all elements
+							//when wrap around we should reset array to null before overwriting
 								if(WorkPutPt>WorkPutPt_Max){
 										WorkFifo_Put(0);          												  // 0 null terminate buffer
 									  //"string\0"_ after put the put ptr is the the right of null terminator so we subtract 1
@@ -285,7 +282,10 @@ void USB_UART_HandleRXBuffer(void){
 								if(Current_Fifo_Level==SIZE_DEPTH){										// fifo wraparound when greater than max fifo depth
 									Current_Fifo_Level=0; 
 									Next_Fifo_Level=SIZE_DEPTH;
-								}	else if(Current_Fifo_Level>0){
+								}	
+								//TODO: prob don't need >0 condition
+								// just the statement is enough? Next_Fifo_Level=Current_Fifo_Level;-----------------------------------
+								else if(Current_Fifo_Level>0){
 									Next_Fifo_Level=Current_Fifo_Level; // reset next index to current fifo index
 																											// this takes care of the history lookup issue
 																											// when the Next_Fifo_Level index is not modified by
@@ -308,7 +308,7 @@ void USB_UART_HandleRXBuffer(void){
 						printf("@user >> ");		// ready for next cmd			
 						USB_BufferReady = true;      
 					
-				} else if (letter == '\n' || letter == 12) {    // ctrl-L is ASCII 12, form feed
+				} else if (letter == 12) {    // ctrl-L is ASCII 12, form feed
 						USB_UART_PrintChar(letter); 				 //echo to terminal	
 						// reset workingFifo pointers to 0 position 
 						WorkFifo_Pointer_RST();	
@@ -350,25 +350,24 @@ void USB_UART_HandleRXBuffer(void){
 						if(letter != 27 && read_counter == 0){
 							
 							
-							//****************************************************************
-							// 																			handle char
-							USB_UART_PrintChar(letter); 				 //echo to terminal
-							// TODO:
-						// change put function to put to temporary fifo
-						// only when return key is pressed when we actually add to permanent fifo	
-							WorkFifo_Put(letter);       // if not one of the escape codes put char in temporary working fifo
-																									 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
-																									 // these code are ignored in SW FIFO
-																									 // if need to support for some odd reason, a patch is needed
-							if(WorkPutPt>WorkPutPt_Max){  //this code is need for intial unsaved state where right arrow key is used
-								WorkPutPt_Max=WorkPutPt;    // save new max
-								//RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; //used Current instead of Next just in case enter key is not pressed
-																																		//bc during query and editing mode it can overite the previous pointer
-																																		//note:this code pairs with the right arrow code below
-																																		//the backspace pairs witht he left arrow code below
-																																		//notice how the "arrow key" conditions below is related to the pointer saved here
-							}
-							
+								//****************************************************************
+								// 																			handle char
+								USB_UART_PrintChar(letter); 				 //echo to terminal
+								// TODO:
+							// change put function to put to temporary fifo
+							// only when return key is pressed when we actually add to permanent fifo	
+								WorkFifo_Put(letter);       // if not one of the escape codes put char in temporary working fifo
+																										 // 'ESC' '[' follow by 'A' 'B' 'C' 'D' are not supported as commands
+																										 // these code are ignored in SW FIFO
+																										 // if need to support for some odd reason, a patch is needed
+								if(WorkPutPt>WorkPutPt_Max){  //this code is need for intial unsaved state where right arrow key is used
+									WorkPutPt_Max=WorkPutPt;    // save new max
+									//RxFifo_Ptr [Current_Fifo_Level][PUT_PTR]=WorkPutPt_Max; //used Current instead of Next just in case enter key is not pressed
+																																			//bc during query and editing mode it can overite the previous pointer
+																																			//note:this code pairs with the right arrow code below
+																																			//the backspace pairs witht he left arrow code below
+																																			//notice how the "arrow key" conditions below is related to the pointer saved here
+								}		
 						} else{
 							
 							Decode_ESC_SEQ(letter);
